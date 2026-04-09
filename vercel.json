@@ -2,7 +2,8 @@
   "github": {
     "silent": true
   },
-  "buildCommand": "npm run build --prefix OmniGuard__frontend",
+  "installCommand": "npm install",
+  "buildCommand": "npm run build -w omniguard-frontend",
   "outputDirectory": "OmniGuard__frontend/dist",
-  "framework": "vite"
+  "framework": null
 }

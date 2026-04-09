@@ -1,9 +1,14 @@
 {
   "name": "omniguard-root",
+  "version": "1.0.0",
+  "description": "OmniGuard Full-Stack Workspace",
   "private": true,
+  "workspaces": [
+    "OmniGuard__frontend"
+  ],
   "scripts": {
-    "build": "npm run build --prefix OmniGuard__frontend",
-    "dev": "npm run dev --prefix OmniGuard__frontend",
-    "lint": "npm run lint --prefix OmniGuard__frontend"
+    "build": "npm run build -w omniguard-frontend",
+    "dev": "npm run dev -w omniguard-frontend",
+    "lint": "npm run lint -w omniguard-frontend"
   }
 }
