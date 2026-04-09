@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OmniGuard Dashboard</title>
+  
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            urgent: "#ef4444",
+            obsidian: "#0f172a",
+            charcoal: "#1e293b",
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #0f172a;
+      color: #f1f5f9;
+      margin: 0;
+      overflow: hidden;
+    }
+    
+    .leaflet-container {
+      width: 100%;
+      height: 100%;
+      background: #0f172a !important;
+    }
+
+    .dark-map-filter .leaflet-tile-pane {
+      filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+      transition: filter 0.5s ease-in-out;
+    }
+
+    .leaflet-popup-content-wrapper { background: transparent !important; box-shadow: none !important; padding: 0 !important; border-radius: 12px; }
+    .leaflet-popup-tip-container { display: none; }
+    .leaflet-popup-content { margin: 0 !important; width: auto !important; }
+
+    /* Custom Pulsing SOS Marker */
+    .sos-marker-pulse { background: transparent; border: none; }
+    .sos-pulse-ring {
+      width: 24px; height: 24px;
+      background-color: #ef4444; border-radius: 50%;
+      position: relative; box-shadow: 0 0 10px #ef4444;
+    }
+    .sos-pulse-ring::before {
+      content: ""; position: absolute; top: -8px; left: -8px;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px solid #ef4444; animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.8); opacity: 1; }
+      50% { transform: scale(1.8); opacity: 0; }
+    }
+
+    /* Custom Responder Marker */
+    .responder-marker-dot { background: transparent; border: none; }
+    .responder-dot {
+      width: 16px; height: 16px; background-color: #3b82f6; 
+      border: 2px solid white; border-radius: 50%; box-shadow: 0 0 12px rgba(59, 130, 246, 0.9);
+      animation: gentle-pulse 2s ease-in-out infinite alternate;
+    }
+    @keyframes gentle-pulse {
+      from { transform: scale(0.9); }
+      to { transform: scale(1.1); box-shadow: 0 0 20px rgba(59, 130, 246, 1); }
+    }
+
+    .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+    .sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+    /* Smooth Nav Label Transitions */
+    .nav-label {
+      transition: max-width 0.3s ease-in-out, opacity 0.2s ease-in-out;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 200px; /* Base width */
+      opacity: 1;
+    }
+    .sidebar-collapsed .nav-label {
+      max-width: 0px;
+      opacity: 0;
+    }
+    .sidebar-collapsed #navLogoText {
+      opacity: 0;
+      max-width: 0px;
+    }
+  </style>
+</head>
+<body class="bg-obsidian text-slate-100 flex h-screen overflow-hidden select-none antialiased">
+
+  <!-- Left Navigation -->
+  <nav id="sidebar" class="flex flex-col bg-charcoal border-r border-[#1e293b] shadow-2xl transition-all duration-300 ease-in-out z-[999] w-64 relative">
+    <div class="h-20 px-4 flex items-center justify-between border-b border-slate-800/50 bg-[#0b1121]">
+      <div id="navLogo" class="flex items-center gap-3 overflow-hidden transition-all duration-300">
+        <i data-lucide="shield-alert" class="text-urgent h-6 w-6 shrink-0"></i>
+        <span id="navLogoText" class="font-bold text-lg tracking-widest text-white uppercase transition-all duration-300 whitespace-nowrap">Omni<span class="font-light text-slate-400">Guard</span></span>
+      </div>
+      <button id="toggleNavBtn" class="p-2 hover:bg-slate-700 active:scale-90 rounded-lg text-slate-400 shrink-0 transition-transform duration-200">
+        <i data-lucide="chevron-left" id="toggleIcon"></i>
+      </button>
+    </div>
+    
+    <div class="flex-1 py-6 flex flex-col gap-3">
+      <!-- Active Item -->
+      <button class="flex items-center justify-start gap-4 px-4 py-3 mx-2 rounded-xl transition-all duration-300 outline-none bg-urgent/10 text-urgent drop-shadow-[0_0_8px_rgba(239,68,68,0.5)] cursor-pointer active:scale-[0.98]">
+        <i data-lucide="alert-triangle" class="shrink-0"></i>
+        <span class="nav-label text-sm font-bold tracking-wide">Duress Mode</span>
+      </button>
+      
+      <button class="flex items-center justify-start gap-4 px-4 py-3 mx-2 rounded-xl transition-all duration-300 outline-none text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer active:scale-[0.98]">
+        <i data-lucide="activity" class="shrink-0"></i>
+        <span class="nav-label text-sm font-bold tracking-wide">Historical Alerts</span>
+      </button>
+      
+      <button class="flex items-center justify-start gap-4 px-4 py-3 mx-2 rounded-xl transition-all duration-300 outline-none text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer active:scale-[0.98]">
+        <i data-lucide="map" class="shrink-0"></i>
+        <span class="nav-label text-sm font-bold tracking-wide">Asset Tracking</span>
+      </button>
+      
+      <button class="flex items-center justify-start gap-4 px-4 py-3 mx-2 rounded-xl transition-all duration-300 outline-none text-slate-400 hover:bg-slate-800 hover:text-white cursor-pointer active:scale-[0.98]">
+        <i data-lucide="layers" class="shrink-0"></i>
+        <span class="nav-label text-sm font-bold tracking-wide">System Diagnostics</span>
+      </button>
+    </div>
+
+    <div class="p-4 border-t border-slate-800">
+       <button class="w-full flex items-center gap-3 p-3 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition-all duration-300 active:scale-95 cursor-pointer text-slate-300 overflow-hidden">
+         <i data-lucide="user-circle" class="text-slate-400 shrink-0"></i>
+         <div class="nav-label text-left ml-1">
+           <div class="text-sm font-bold text-white leading-tight">Commander</div>
+           <div class="text-xs text-slate-500 leading-tight">Node Alpha-1</div>
+         </div>
+       </button>
+    </div>
+  </nav>
+
+  <!-- Main Console -->
+  <main class="flex-1 flex relative">
+    
+    <!-- Central Map Area -->
+    <div id="map" class="flex-1 relative bg-[#0b1121] z-0 transition-all duration-500"></div>
+
+    <!-- Floating UI: Top Left Status -->
+    <div class="absolute top-6 left-6 z-[400] flex flex-col gap-3 pointer-events-none">
+      <div class="bg-charcoal/80 backdrop-blur-lg border border-slate-700/50 rounded-2xl p-4 shadow-xl pointer-events-auto transition-all duration-500 hover:bg-charcoal/90">
+        <h2 class="text-sm font-black text-white uppercase tracking-widest mb-1 flex items-center gap-2 drop-shadow-md">
+           <i data-lucide="radio" class="text-urgent animate-pulse h-4 w-4"></i> Live Screen
+        </h2>
+        <p class="text-xs font-medium text-slate-400 font-mono">SECTOR_ALPHA • 3 EVENTS</p>
+      </div>
+    </div>
+
+    <!-- Floating UI: Top Right Map Controls -->
+    <div class="absolute top-6 right-6 z-[400] flex gap-3">
+      <button id="toggleMapTypeBtn" class="bg-charcoal/90 hover:bg-slate-700 active:scale-95 backdrop-blur-md border border-slate-600 text-white p-3 rounded-xl shadow-2xl flex items-center gap-2 transition-all duration-200 outline-none cursor-pointer">
+        <i data-lucide="layers" class="h-4 w-4"></i>
+        <span id="mapTypeLabel" class="text-xs font-bold tracking-widest">SATELLITE</span>
+      </button>
+      <button id="recenterBtn" class="bg-charcoal/90 hover:bg-slate-700 active:scale-95 backdrop-blur-md border border-slate-600 text-white p-3 rounded-xl shadow-2xl flex items-center gap-2 transition-all duration-200 outline-none cursor-pointer">
+        <i data-lucide="navigation" class="text-blue-400 h-4 w-4"></i>
+        <span class="text-xs font-bold tracking-widest">GLOBAL VIEW</span>
+      </button>
+    </div>
+
+    <!-- Floating UI: Bottom Command Bar -->
+    <div class="absolute bottom-6 left-6 right-6 z-[400]">
+      <div class="bg-charcoal/90 backdrop-blur-xl border border-slate-700 rounded-[2rem] p-4 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center justify-between transition-all duration-300 hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)] hover:bg-charcoal/95">
+        <div class="flex items-center gap-4">
+          <button class="bg-blue-600 hover:bg-blue-500 active:scale-95 text-white px-8 py-3.5 rounded-2xl text-sm font-bold flex items-center gap-3 transition-all duration-200 shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] outline-none border border-blue-400/50 cursor-pointer">
+            <i data-lucide="message-square" class="h-4 w-4"></i>
+            ENCRYPTED COMM
+          </button>
+          <button class="bg-[#0f172a] hover:bg-slate-800 active:scale-95 text-white px-8 py-3.5 rounded-2xl text-sm font-bold flex items-center gap-3 transition-all duration-200 border border-slate-600 shadow-inner outline-none cursor-pointer">
+            <i data-lucide="activity" class="text-urgent h-4 w-4"></i>
+            MASS NOTIFICATION
+          </button>
+        </div>
+        <div class="flex items-center gap-6 px-6">
+          <div class="flex items-center gap-2 text-[11px] font-mono font-bold text-slate-400 tracking-wider">
+            <i data-lucide="shield" class="text-emerald-400 h-4 w-4 drop-shadow-[0_0_8px_rgba(52,211,153,0.8)]"></i> 
+            SECURE_LINK
+          </div>
+          <div class="w-px h-8 bg-slate-700/50"></div>
+          <div class="flex items-center gap-2 text-[11px] font-mono font-bold text-slate-400 tracking-wider">
+            LATENCY <span class="text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded">12ms</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Incident Feed Panel -->
+    <div class="w-[400px] bg-charcoal border-l border-slate-800 flex flex-col z-[999] shadow-[-20px_0_50px_rgba(0,0,0,0.3)]">
+      <div class="h-20 px-8 border-b border-slate-800/50 flex items-center justify-between bg-[#0b1121]">
+        <h2 class="font-bold text-white tracking-widest text-sm flex items-center gap-2"><i data-lucide="alert-triangle" class="text-slate-400 h-4 w-4"></i> INCIDENT LOG</h2>
+        <span class="bg-urgent/10 text-urgent border border-urgent/30 text-[10px] font-bold px-3 py-1 rounded-full animate-pulse tracking-widest shadow-[0_0_10px_rgba(239,68,68,0.2)]">3 CRITICAL</span>
+      </div>
+      
+      <div id="incidentList" class="flex-1 overflow-y-auto p-6 sidebar-scroll flex flex-col gap-6 bg-obsidian/40">
+        <!-- Incidents injected here via JavaScript -->
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Data Models
+    const centerCoords = [20.0, 0.0];
+    let currentMapType = 'dark';
+    const tileUrls = {
+      dark: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+      satellite: 'https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+    };
+
+    const incidents = [
+      { id: 'INC-7023', type: 'Medical Emergency', status: 'CRITICAL', user: 'Jane Doe', battery: '14%', device: 'iPhone 13 Pro', coords: [40.7128, -74.0060], time: '2m ago' },
+      { id: 'INC-7024', type: 'Duress Pin', status: 'ACTIVE', user: 'Node Europe', battery: '98%', device: 'Radio Unit', coords: [51.5074, -0.1278], time: '14m ago' },
+      { id: 'INC-7025', type: 'Fire Alarm Triggered', status: 'DISPATCHED', user: 'Warehouse Asia', battery: 'AC Power', device: 'OmniNode', coords: [35.6762, 139.6503], time: '1h ago' }
+    ];
+
+    const responders = [
+      { id: 'R-01', name: 'Alpha Response Team', coords: [40.7580, -73.9855] },
+      { id: 'R-02', name: 'Bravo Security', coords: [48.8566, 2.3522] },
+    ];
+
+    // Initialize Map with Smooth Zoom Configurations
+    const map = L.map('map', { 
+      zoomControl: false,
+      zoomAnimation: true,
+      fadeAnimation: true,
+      markerZoomAnimation: true
+    }).setView(centerCoords, 3);
+    
+    document.getElementById('map').classList.add('dark-map-filter');
+    let tileLayer = L.tileLayer(tileUrls[currentMapType], { subdomains:['mt0','mt1','mt2','mt3'] }).addTo(map);
+
+    // Custom Icons
+    const sosHtml = `<div class="sos-pulse-ring"></div>`;
+    const sosIcon = L.divIcon({ className: 'sos-marker-pulse', html: sosHtml, iconSize: [24, 24], iconAnchor: [12, 12] });
+
+    const respHtml = `<div class="responder-dot"></div>`;
+    const responderIcon = L.divIcon({ className: 'responder-marker-dot', html: respHtml, iconSize: [16, 16], iconAnchor: [8, 8] });
+
+    // Render Incidents on Map & Sidebar
+    const incidentContainer = document.getElementById('incidentList');
+    incidents.forEach((inc, index) => {
+      // Map Marker
+      const marker = L.marker(inc.coords, { icon: sosIcon }).addTo(map);
+      marker.bindPopup(`
+        <div class="bg-charcoal p-5 rounded-2xl border border-slate-700/80 shadow-2xl min-w-[240px] transform transition-all">
+          <div class="flex justify-between items-center mb-4">
+            <span class="text-[10px] font-bold text-urgent px-2.5 py-1 bg-red-500/10 border border-red-500/30 rounded-md shadow-[0_0_10px_rgba(239,68,68,0.2)] uppercase tracking-widest">${inc.status}</span>
+            <span class="text-[10px] font-mono text-slate-400">${inc.id}</span>
+          </div>
+          <h3 class="font-bold text-white mb-1 uppercase tracking-wider text-[13px]">${inc.type}</h3>
+          <p class="text-xs text-blue-400 font-mono mb-5 flex items-center gap-2"><i data-lucide="map" class="h-3 w-3"></i> ${inc.coords[0].toFixed(5)}, ${inc.coords[1].toFixed(5)}</p>
+          <button class="w-full py-2.5 active:scale-95 bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold rounded-xl transition-all duration-200 tracking-widest shadow-[0_4px_15px_rgba(37,99,235,0.4)] outline-none cursor-pointer">DISPATCH TEAM</button>
+        </div>
+      `, { closeButton: false, offset: [0, -10] });
+
+      // Sidebar Item HTML
+      const isCritical = inc.status === 'CRITICAL';
+      const isLowBattery = inc.battery.includes('%') && parseInt(inc.battery) < 20;
+      
+      const itemHTML = `
+        <div class="bg-charcoal hover:bg-slate-800 border ${index === 0 ? 'border-urgent/50 shadow-[0_0_20px_rgba(239,68,68,0.15)] ring-1 ring-urgent/30' : 'border-slate-700'} rounded-2xl p-6 cursor-pointer transition-all duration-300 ease-out relative overflow-hidden group hover:scale-[1.02] active:scale-[0.98]" onclick="map.flyTo([${inc.coords[0]}, ${inc.coords[1]}], 16, {duration: 1.8, easeLinearity: 0.25})">
+          ${index === 0 ? '<div class="absolute top-0 left-0 w-full h-[4px] bg-urgent shadow-[0_0_12px_#ef4444]"></div>' : ''}
+          <div class="flex justify-between items-start mb-5">
+            <span class="text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-widest ${isCritical ? 'bg-urgent text-white shadow-[0_0_10px_rgba(239,68,68,0.5)] border border-red-400/50' : 'bg-blue-500/10 text-blue-400 border border-blue-500/30'}">
+              ${inc.status}
+            </span>
+            <span class="text-[11px] font-mono font-medium text-slate-500 bg-slate-800/80 px-2.5 py-0.5 rounded shadow-inner">${inc.time}</span>
+          </div>
+          <h3 class="font-black text-slate-100 text-[15px] mb-2 uppercase tracking-wide group-hover:text-white transition-colors duration-300 drop-shadow-sm">${inc.type}</h3>
+          <p class="text-xs text-slate-400 mb-6 max-w-[95%] leading-relaxed">System recorded coordinate deviation. Awaiting strict operator review actions immediately.</p>
+          <div class="space-y-3.5 pt-5 border-t border-slate-700/60 font-mono">
+            <div class="flex justify-between items-center text-[11px]">
+              <span class="text-slate-500 flex items-center gap-2"><i data-lucide="shield" class="h-3.5 w-3.5 text-slate-400"></i> Target</span>
+              <span class="font-bold text-slate-200 tracking-wider">${inc.user}</span>
+            </div>
+            <div class="flex justify-between items-center text-[11px]">
+              <span class="text-slate-500 flex items-center gap-2"><i data-lucide="smartphone" class="h-3.5 w-3.5 text-slate-400"></i> Hardware</span>
+              <span class="font-bold text-slate-200 tracking-wider">${inc.device}</span>
+            </div>
+            <div class="flex justify-between items-center text-[11px]">
+              <span class="text-slate-500 flex items-center gap-2"><i data-lucide="battery" class="h-3.5 w-3.5 ${isLowBattery ? 'text-urgent' : 'text-emerald-500'}"></i> Power</span>
+              <span class="font-bold tracking-wider ${isLowBattery ? 'text-urgent drop-shadow-[0_0_5px_rgba(239,68,68,0.5)]' : 'text-slate-200'}">${inc.battery}</span>
+            </div>
+            <div class="flex justify-between items-center text-[11px]">
+              <span class="text-slate-500 flex items-center gap-2"><i data-lucide="map" class="h-3.5 w-3.5 text-slate-400"></i> Loc</span>
+              <span class="font-bold text-blue-400 tracking-widest">${inc.coords[0].toFixed(4)}, ${inc.coords[1].toFixed(4)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+      incidentContainer.innerHTML += itemHTML;
+    });
+
+    responders.forEach(r => {
+      const marker = L.marker(r.coords, { icon: responderIcon }).addTo(map);
+      marker.bindPopup(`
+        <div class="bg-[#1e293b] p-4 rounded-xl border border-slate-700/80 shadow-2xl">
+          <span class="font-bold text-[13px] tracking-wide text-white flex items-center gap-2 mb-1.5"><i data-lucide="shield" class="text-blue-400 h-4 w-4"></i> ${r.name}</span>
+          <p class="text-[10px] text-green-400 font-mono font-bold tracking-widest bg-green-400/10 inline-block px-2 py-0.5 rounded border border-green-400/20">STATUS: MOBILE</p>
+        </div>
+      `, { closeButton: false, offset: [0, -6] });
+    });
+
+    // Re-trigger icon generation
+    lucide.createIcons();
+
+    // Interaction Logistics
+    document.getElementById('recenterBtn').addEventListener('click', () => {
+      map.flyTo(centerCoords, 3, { duration: 1.5, easeLinearity: 0.25 });
+    });
+
+    document.getElementById('toggleMapTypeBtn').addEventListener('click', () => {
+      currentMapType = currentMapType === 'dark' ? 'satellite' : 'dark';
+      document.getElementById('mapTypeLabel').textContent = currentMapType === 'dark' ? 'SATELLITE' : 'DARK MAP';
+      
+      const mapContainer = document.getElementById('map');
+      if (currentMapType === 'dark') mapContainer.classList.add('dark-map-filter');
+      else mapContainer.classList.remove('dark-map-filter');
+
+      map.removeLayer(tileLayer);
+      tileLayer = L.tileLayer(tileUrls[currentMapType], { subdomains:['mt0','mt1','mt2','mt3'] }).addTo(map);
+    });
+
+    // Sidebar Smooth Toggle Logistics
+    let isNavOpen = true;
+    document.getElementById('toggleNavBtn').addEventListener('click', () => {
+      isNavOpen = !isNavOpen;
+      const sidebar = document.getElementById('sidebar');
+      const toggleIcon = document.getElementById('toggleIcon');
+      
+      if (isNavOpen) {
+        sidebar.classList.remove('sidebar-collapsed', 'w-20');
+        sidebar.classList.add('w-64');
+        toggleIcon.setAttribute('data-lucide', 'chevron-left');
+      } else {
+        sidebar.classList.add('sidebar-collapsed');
+        sidebar.classList.remove('w-64');
+        sidebar.classList.add('w-20');
+        toggleIcon.setAttribute('data-lucide', 'menu');
+      }
+      setTimeout(() => lucide.createIcons(), 50); // Redraw icons properly after attribute shift
+    });
+  </script>
+</body>
+</html>
