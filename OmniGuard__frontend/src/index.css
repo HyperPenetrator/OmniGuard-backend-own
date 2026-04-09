@@ -1,14 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-obsidian: #0f172a;
+  --color-charcoal: #1e293b;
+  --color-urgent: #ef4444;
+}
 
 @layer base {
   body {
-    background-color: #0f172a;
-    color: #f1f5f9;
+    @apply bg-obsidian text-slate-100 antialiased h-screen overflow-hidden;
   }
 }
 
+/* Custom Leaflet Styles */
 .leaflet-container {
   width: 100%;
   height: 100%;
@@ -37,11 +41,11 @@
   height: 40px;
   border-radius: 50%;
   border: 2px solid #ef4444;
-  animation: pulse 1.5s infinite;
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 @keyframes pulse {
-  0% { transform: scale(0.5); opacity: 1; }
-  100% { transform: scale(1.5); opacity: 0; }
+  0%, 100% { transform: scale(0.8); opacity: 1; }
+  50% { transform: scale(1.8); opacity: 0; }
 }
 
 /* Custom Responder Marker */
@@ -52,8 +56,19 @@
 .responder-dot {
   width: 16px;
   height: 16px;
-  background-color: #3b82f6;
+  background-color: #3b82f6; 
   border: 2px solid white;
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.8);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.9);
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
 }

@@ -200,7 +200,7 @@ async function bootstrap() {
     process.exit(1);
   });
 
-  server.listen(env.PORT, () => {
+  server.listen(env.PORT, '0.0.0.0', () => {
     logger.info('');
     logger.info('┌─────────────────────────────────────────────┐');
     logger.info(`│  OmniGuard API listening on port ${String(env.PORT).padEnd(13)}│`);
