@@ -1,0 +1,9 @@
+{
+  "name": "omniguard-root",
+  "private": true,
+  "scripts": {
+    "build": "npm run build --prefix OmniGuard__frontend",
+    "dev": "npm run dev --prefix OmniGuard__frontend",
+    "lint": "npm run lint --prefix OmniGuard__frontend"
+  }
+}

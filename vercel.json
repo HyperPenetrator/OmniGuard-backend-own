@@ -1,0 +1,8 @@
+{
+  "github": {
+    "silent": true
+  },
+  "buildCommand": "npm run build --prefix OmniGuard__frontend",
+  "outputDirectory": "OmniGuard__frontend/dist",
+  "framework": "vite"
+}
