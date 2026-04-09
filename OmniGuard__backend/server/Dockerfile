@@ -29,13 +29,14 @@ RUN mkdir -p logs && chown -R omniguard:omniguard /app
 # Switch to non-root user
 USER omniguard
 
-# Expose API port
-EXPOSE 3001
+# Expose API port (7860 required for Hugging Face Spaces)
+EXPOSE 7860
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3001/api/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:7860/api/health || exit 1
 
 # Start server
 ENV NODE_ENV=production
+ENV PORT=7860
 CMD ["node", "server.js"]
