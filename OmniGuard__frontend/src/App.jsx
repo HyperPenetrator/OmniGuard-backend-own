@@ -62,10 +62,13 @@ const sosIcon = L.divIcon({
 });
 
 const responderIcon = L.divIcon({
-  className: 'responder-marker-dot',
-  html: `<div class="responder-dot"></div>`,
-  iconSize: [16, 16],
-  iconAnchor: [8, 8],
+  className: 'responder-marker-custom',
+  html: `<div class="responder-pin-wrapper">
+           <div class="responder-pin-dot"></div>
+           <div class="responder-pin-pulse"></div>
+         </div>`,
+  iconSize: [30, 30],
+  iconAnchor: [15, 15],
 });
 
 // ── Map Utilities ────────────────────────────────────────
@@ -212,7 +215,9 @@ export default function App() {
         setIncidents(incRes.value.data || []);
       }
       if (respRes.status === 'fulfilled' && respRes.value?.success) {
-        setResponders(respRes.value.data || []);
+        const data = respRes.value.data || [];
+        console.log(`[App] Fetched ${data.length} responders`);
+        setResponders(data);
       }
     } catch (err) {
       console.error('[App] fetchData error:', err);
@@ -260,6 +265,13 @@ export default function App() {
       disconnect();
     };
   }, [authenticated, fetchData]);
+
+  // Periodic fallback refresh for coordinators
+  useEffect(() => {
+    if (!authenticated || !isCoordinator) return;
+    const interval = setInterval(fetchData, 60000); // 1 minute fallback
+    return () => clearInterval(interval);
+  }, [authenticated, isCoordinator, fetchData]);
 
   const handleLoginSuccess = (userData) => {
     setUser(userData);
@@ -363,6 +375,30 @@ export default function App() {
             <TileLayer url={tileUrls[mapType]} />
             <CenterMap coords={centerCoords} />
 
+            {/* Responder Markers */}
+            {responders.map(res => {
+              const live = livePositions[res.id];
+              const pos = live ? [live.lat, live.lng] : (res.currentPosition ? [res.currentPosition.lat, res.currentPosition.lng] : null);
+              if (!pos) return null;
+              
+              return (
+                <Marker key={`res-m-${res.id}`} position={pos} icon={responderIcon}>
+                  <Popup className="omni-popup" closeButton={false}>
+                    <div className="bg-charcoal p-4 rounded-2xl border border-white/5 shadow-2xl min-w-[180px] anim-scale-in">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-[10px] font-black text-white uppercase tracking-widest">{res.name}</span>
+                        <div className={`w-2 h-2 rounded-full ${res.status?.toLowerCase() === 'available' ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-amber-500'}`} />
+                      </div>
+                      <div className="text-[8px] font-mono text-slate-500 uppercase tracking-tighter mb-3">{res.teamType || 'OPERATIVE'} • CH {res.radioChannel || '--'}</div>
+                      <div className="bg-slate-900/50 rounded-lg p-2 border border-white/5 text-[10px] font-mono text-blue-400">
+                        {pos[0].toFixed(4)}, {pos[1].toFixed(4)}
+                      </div>
+                    </div>
+                  </Popup>
+                </Marker>
+              );
+            })}
+
             {incidents.map(inc => (
               <Marker key={inc.id} position={getIncidentCoords(inc)} icon={sosIcon}>
                 <Popup className="omni-popup" closeButton={false}>
@@ -442,6 +478,56 @@ export default function App() {
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .omni-popup .leaflet-popup-content-wrapper { background: transparent !important; box-shadow: none !important; padding: 0 !important; }
         .omni-popup .leaflet-popup-tip { display: none; }
+
+        .responder-pin-wrapper {
+          position: relative;
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .responder-pin-dot {
+          width: 10px;
+          height: 10px;
+          background: #3b82f6;
+          border: 2px solid white;
+          border-radius: 50%;
+          z-index: 2;
+          box-shadow: 0 0 10px rgba(59, 130, 246, 1);
+        }
+        .responder-pin-pulse {
+          position: absolute;
+          width: 24px;
+          height: 24px;
+          border: 2px solid #3b82f6;
+          border-radius: 50%;
+          animation: responder-pulse 2s infinite;
+          opacity: 0;
+        }
+        @keyframes responder-pulse {
+          0% { transform: scale(0.5); opacity: 0.8; }
+          100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .sos-marker-pulse {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .sos-pulse-ring {
+          width: 16px;
+          height: 16px;
+          background: #ef4444;
+          border-radius: 50%;
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+          animation: sos-pulse 2s infinite;
+        }
+        @keyframes sos-pulse {
+          0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+          70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+          100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
       `}} />
     </div>
   );

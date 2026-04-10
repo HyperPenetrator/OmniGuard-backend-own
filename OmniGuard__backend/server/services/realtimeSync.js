@@ -19,7 +19,8 @@ const { subscribeToIncidents } = require('./firestoreService');
 function startRealtimeSync(wsService, logger) {
   logger.info('Starting Firestore → WebSocket real-time sync...');
 
-  const unsubscribe = subscribeToIncidents((changeType, incidentData) => {
+  const incidentUnsub = subscribeToIncidents((changeType, incidentData) => {
+    // ... existing incident sync logic ...
     // Map Firestore change types to WebSocket events
     const eventMap = {
       added: 'INCIDENT_CREATED',
@@ -63,9 +64,27 @@ function startRealtimeSync(wsService, logger) {
     });
   });
 
-  logger.info('✔ Firestore real-time sync active');
+  // Sync Responder Locations (Live Assets)
+  const { subscribeToResponders } = require('./firestoreService');
+  const responderUnsub = subscribeToResponders((changeType, responderData) => {
+    if (changeType === 'modified' && responderData.currentPosition) {
+      wsService.broadcastToRole('coordinator', 'RESPONDER_LOCATION_UPDATE', {
+        responderId: responderData.id,
+        name: responderData.name,
+        lat: responderData.currentPosition.lat,
+        lng: responderData.currentPosition.lng,
+        updatedAt: responderData.currentPosition.updatedAt,
+        source: 'firestore-sync',
+      });
+    }
+  });
 
-  return unsubscribe;
+  logger.info('✔ Firestore real-time sync active (Incidents + Responders)');
+
+  return () => {
+    incidentUnsub();
+    responderUnsub();
+  };
 }
 
 module.exports = { startRealtimeSync };
