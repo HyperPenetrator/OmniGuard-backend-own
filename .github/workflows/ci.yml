@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  lint-and-test:
-    name: Lint & Test
+  lint-and-test-backend:
+    name: Backend Lint & Test
     runs-on: ubuntu-latest
     
     defaults:
@@ -28,12 +28,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: OmniGuard__backend/server/package-lock.json
+          cache-dependency-path: package-lock.json
 
-      - name: Install dependencies
+      - name: Install dependencies (Root)
         run: npm ci
 
-      - name: Run tests
+      - name: Run backend tests
         run: npm test -- --coverage --forceExit
         env:
           NODE_ENV: test
@@ -52,10 +52,31 @@ jobs:
           path: OmniGuard__backend/server/coverage/
           retention-days: 7
 
+  build-frontend:
+    name: Frontend Build Check
+    runs-on: ubuntu-latest
+    needs: lint-and-test-backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install dependencies (Root)
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build -w omniguard-frontend
+
   docker-build:
     name: Docker Build Check
     runs-on: ubuntu-latest
-    needs: lint-and-test
+    needs: build-frontend
 
     steps:
       - name: Checkout repository
