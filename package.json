@@ -12,7 +12,10 @@
     "lint": "npm run lint -w omniguard-frontend"
   },
   "devDependencies": {
-    "rolldown": "^1.0.0-rc.13"
+    "rolldown": "1.0.0-rc.13"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-linux-x64-gnu": "1.0.0-rc.13"
   },
   "engines": {
     "node": ">=22.12.0"
