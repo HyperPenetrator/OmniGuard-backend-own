@@ -10,5 +10,11 @@
     "build": "npm run build -w omniguard-frontend",
     "dev": "npm run dev -w omniguard-frontend",
     "lint": "npm run lint -w omniguard-frontend"
+  },
+  "devDependencies": {
+    "rolldown": "^1.0.0-rc.13"
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }
