@@ -12,7 +12,9 @@
     "lint": "npm run lint -w omniguard-frontend"
   },
   "devDependencies": {
-    "rolldown": "1.0.0-rc.13"
+    "rolldown": "1.0.0-rc.13",
+    "vite": "8.0.7",
+    "lightningcss": "1.32.0"
   },
   "optionalDependencies": {
     "@rolldown/binding-linux-x64-gnu": "1.0.0-rc.13",
