@@ -70,8 +70,10 @@ jobs:
       - name: Install dependencies (Root)
         run: npm install
 
-      - name: Install native Linux bindings
-        run: npm install @rolldown/binding-linux-x64-gnu@1.0.0-rc.13 lightningcss-linux-x64-gnu@1.32.0 --no-save
+      - name: Install native Linux bindings for frontend workspace
+        run: |
+          npm install @rolldown/binding-linux-x64-gnu@1.0.0-rc.13 --no-save
+          npm install lightningcss-linux-x64-gnu@1.32.0 --no-save --prefix OmniGuard__frontend
 
       - name: Build frontend
         run: npm run build -w omniguard-frontend
