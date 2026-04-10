@@ -31,7 +31,7 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies (Root)
-        run: npm ci
+        run: npm install
 
       - name: Run backend tests
         run: npm test -- --coverage --forceExit
@@ -68,7 +68,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies (Root)
-        run: npm ci
+        run: npm install
 
       - name: Build frontend
         run: npm run build -w omniguard-frontend
