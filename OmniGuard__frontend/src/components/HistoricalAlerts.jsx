@@ -130,7 +130,7 @@ function IncidentCard({ incident, isExpanded, onToggle, onStatusUpdate }) {
 
 // ── Historical Alerts View ───────────────────────────────
 
-export default function HistoricalAlerts() {
+export default function HistoricalAlerts({ liveIncidents = [] }) {
   const isCoordinator = useCoordinator();
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -153,6 +153,18 @@ export default function HistoricalAlerts() {
   useEffect(() => {
     if (isCoordinator) fetchIncidents();
   }, [fetchIncidents, isCoordinator]);
+
+  // Sync with live incidents from App layer
+  useEffect(() => {
+    if (liveIncidents.length > 0) {
+      setIncidents(prev => {
+        const existingIds = new Set(prev.map(i => i.id));
+        const news = liveIncidents.filter(li => !existingIds.has(li.id));
+        if (news.length === 0) return prev;
+        return [...news, ...prev];
+      });
+    }
+  }, [liveIncidents]);
 
   const handleStatusUpdate = async (id, status) => {
     try {

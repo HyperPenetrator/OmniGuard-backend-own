@@ -431,6 +431,32 @@ function subscribeToIncidents(callback) {
   return unsubscribe;
 }
 
+/**
+ * Subscribe to real-time responder changes.
+ * Returns an unsubscribe function.
+ * @param {Function} callback - Called with (changeType, responderData)
+ * @returns {Function} Unsubscribe function
+ */
+function subscribeToResponders(callback) {
+  const db = getDb();
+
+  const unsubscribe = db
+    .collection(COLLECTIONS.RESPONDERS)
+    .onSnapshot(
+      (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          const data = { id: change.doc.id, ...change.doc.data() };
+          callback(change.type, data);
+        });
+      },
+      (error) => {
+        console.error('[FirestoreService] Responder subscription error:', error.message);
+      }
+    );
+
+  return unsubscribe;
+}
+
 module.exports = {
   COLLECTIONS,
   // Incidents
@@ -454,4 +480,5 @@ module.exports = {
   updateResponderStatus,
   // Real-time
   subscribeToIncidents,
+  subscribeToResponders,
 };
