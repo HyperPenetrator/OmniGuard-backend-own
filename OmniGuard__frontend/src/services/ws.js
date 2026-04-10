@@ -13,7 +13,12 @@ function getWsUrl() {
   const envUrl = import.meta.env.VITE_WS_URL;
   if (envUrl) return envUrl;
 
-  // Auto-detect from page origin: http→ws, https→wss
+  // Fallback to production backend if not on localhost
+  if (window.location.hostname !== 'localhost') {
+    return 'wss://hrishikeshdutta-omniguard-api.hf.space/ws';
+  }
+
+  // Auto-detect from page origin for local development
   const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   return `${proto}//${window.location.host}/ws`;
 }
