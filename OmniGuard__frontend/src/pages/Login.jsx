@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Lock, Mail, ChevronRight, Activity, AlertCircle } from 'lucide-react';
+import { Shield, Lock, Mail, ChevronRight, Activity, AlertCircle, Users } from 'lucide-react';
+
+const MOCK_USERS = [
+  { email: 'coordinator@omniguard.io', accessCode: 'omni2024!', role: 'coordinator', name: 'COMMAND ALPHA', rank: 'Commander' },
+  { email: 'medic1@omniguard.io', accessCode: 'resp2024!', role: 'responder', name: 'UNIT M-1', team: 'Medical', unitId: 'MED-77', status: 'Available' },
+  { email: 'fire_beta@omniguard.io', accessCode: 'resp2024!', role: 'responder', name: 'ENGINE 4', team: 'Fire', unitId: 'ENG-04', status: 'On Patrol' },
+  { email: 'patrol99@omniguard.io', accessCode: 'resp2024!', role: 'responder', name: 'OFFICER 99', team: 'Police', unitId: 'POL-99', status: 'Available' },
+  { email: 'tech_ops@omniguard.io', accessCode: 'resp2024!', role: 'responder', name: 'HAZMAT TEAM', team: 'Tech-Hazard', unitId: 'HAZ-01', clearance: 'Level 4' },
+  { email: 'civilian@omniguard.io', accessCode: 'civ2024!', role: 'civilian', name: 'JANE DOE', location: 'Downtown', priority: 'Standard' },
+];
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -15,25 +24,16 @@ export default function Login({ onLogin }) {
 
     // Simulate validation delay
     setTimeout(() => {
-      let role = '';
+      const foundUser = MOCK_USERS.find(u => u.email === email && u.accessCode === accessCode);
       
-      // Role detection based on exact email and access code mapping
-      if (email === 'coordinator@omniguard.io' && accessCode === 'omni2024!') {
-        role = 'coordinator';
-      } else if (email === 'responder1@omniguard.io' && accessCode === 'resp2024!') {
-        role = 'responder';
-      } else if (email === 'civilian@omniguard.io' && accessCode === 'civ2024!') {
-        role = 'civilian';
-      } else {
+      if (!foundUser) {
         setError('Invalid credentials or unauthorized access code.');
         setIsLoading(false);
         return;
       }
 
       const userData = {
-        email,
-        role,
-        name: email.split('@')[0].toUpperCase(),
+        ...foundUser,
         isAuthenticated: true
       };
 
@@ -124,7 +124,37 @@ export default function Login({ onLogin }) {
             </button>
           </form>
 
-          <div className="mt-10 pt-8 border-t border-slate-800 flex flex-col items-center gap-4">
+          <div className="mt-8 border-t border-slate-800 pt-6">
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+              <Users size={14} className="text-emerald-500" /> Test Accounts
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+              {MOCK_USERS.map((u, i) => (
+                <div 
+                  key={i} 
+                  onClick={() => {setEmail(u.email); setAccessCode(u.accessCode);}} 
+                  className="bg-slate-800/40 border border-slate-700/50 p-3 rounded-xl cursor-pointer hover:bg-slate-800 hover:border-emerald-500/30 transition-all group"
+                >
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-[11px] font-bold text-slate-200 truncate pr-2 group-hover:text-emerald-400 transition-colors">{u.email}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[10px] text-slate-500 font-mono">PWD: {u.accessCode}</span>
+                    <span className={`text-[8px] uppercase tracking-wider font-black px-2 py-0.5 rounded-full ${
+                      u.role === 'coordinator' ? 'bg-blue-500/20 text-blue-400' 
+                      : u.role === 'responder' ? 'bg-emerald-500/20 text-emerald-400' 
+                      : 'bg-slate-500/20 text-slate-400'
+                    }`}>
+                      {u.role}
+                    </span>
+                  </div>
+                  {u.team && <div className="text-[9px] text-slate-400 mt-2 font-mono bg-slate-900/50 inline-block px-2 py-1 rounded">Team: {u.team} | {u.unitId}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-slate-800 flex flex-col items-center gap-4">
             <p className="text-[10px] text-slate-600 font-mono text-center">
               SYSTEM ACCESS IS MONITORED. UNAUTHORIZED ATTEMPTS WILL BE TRACED.
             </p>
