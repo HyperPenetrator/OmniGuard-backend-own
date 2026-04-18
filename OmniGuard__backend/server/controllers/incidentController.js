@@ -135,7 +135,11 @@ async function create(req, res, next) {
       incidentNumber: generateIncidentNumber(),
       type,
       location: {
-        sector: typeof location === 'string' ? location : (location?.sector || 'G-Sector Alpha'),
+        sector: typeof location === 'string' 
+          ? location 
+          : (typeof location?.sector === 'string' 
+              ? location.sector 
+              : (location?.sector?.sector || location?.address || 'G-Sector Alpha')),
         coordinates: location?.coordinates || (location?.lat ? { lat: location.lat, lng: location.lng } : null),
         address: location?.address || (typeof location === 'string' ? null : null),
       },

@@ -83,12 +83,18 @@ async function bootstrap() {
   // Explicitly handle WebSocket upgrades for production proxies (HF/Nginx)
   server.on('upgrade', (request, socket, head) => {
     const { pathname } = require('url').parse(request.url);
+    const origin = request.headers.origin;
+    const host = request.headers.host;
 
+    logger.info(`WS Upgrade Request: ${pathname} | Origin: ${origin} | Host: ${host}`);
+
+    // Simple path routing
     if (pathname === '/ws') {
       wsService.wss.handleUpgrade(request, socket, head, (ws) => {
         wsService.wss.emit('connection', ws, request);
       });
     } else {
+      logger.warn(`WS Upgrade Rejected: Invalid path ${pathname}`);
       socket.destroy();
     }
   });

@@ -14,7 +14,7 @@ export default function ResponderIncidents({ incidents = [] }) {
     type: inc.type,
     status: inc.status || 'Dispatched',
     priority: inc.severity === 'high' ? 'Critical' : inc.severity === 'medium' ? 'High' : 'Normal',
-    location: inc.lat ? `${inc.lat.toFixed(2)}, ${inc.lng.toFixed(2)}` : inc.location || 'Unknown Location',
+    location: inc.lat ? `${inc.lat.toFixed(2)}, ${inc.lng.toFixed(2)}` : (typeof inc.location === 'string' ? inc.location : (inc.location?.sector || inc.location?.address || 'Unknown Location')),
     distance: inc.distance || '1.2km',
     ...inc
   }));

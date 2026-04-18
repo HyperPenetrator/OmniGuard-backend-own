@@ -107,9 +107,11 @@ export default function Dashboard({ incidents, onUpdateStatus }) {
                             <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">{inc.incidentNumber || inc.id}</span>
                             <span className="text-[10px] font-mono text-slate-500 ml-auto">{inc.status === 'detected' ? 'UNRECOGNIZED_THREAT' : 'TEAM_EN_ROUTE'}</span>
                          </div>
-                         <h4 className="text-sm font-bold text-slate-700 group-hover:text-emerald-600 transition-colors uppercase">{inc.type} - {inc.location?.sector || 'Unknown Sector'}</h4>
+                         <h4 className="text-sm font-bold text-slate-700 group-hover:text-emerald-600 transition-colors uppercase">
+                           {inc.type} - {typeof inc.location === 'string' ? inc.location : (inc.location?.sector || inc.location?.address || 'Unknown Sector')}
+                         </h4>
                          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                           Incident detected at {inc.location?.coordinates ? `coordinates [${inc.location.coordinates.lat.toFixed(4)}, ${inc.location.coordinates.lng.toFixed(4)}]` : (inc.location?.address || 'Unknown Location')}. Immediate response required.
+                           Incident detected at {inc.location?.coordinates ? `coordinates [${inc.location.coordinates.lat.toFixed(4)}, ${inc.location.coordinates.lng.toFixed(4)}]` : (typeof inc.location === 'string' ? inc.location : (inc.location?.address || 'Unknown Location'))}. Immediate response required.
                          </p>
                          
                          <div className="flex items-center gap-4 mt-6">
