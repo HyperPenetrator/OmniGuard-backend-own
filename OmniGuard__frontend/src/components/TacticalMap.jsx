@@ -51,15 +51,15 @@ export default function TacticalMap({ incidents }) {
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
         
-        {incidents.map((inc) => (
+        {incidents.filter(inc => inc.location?.coordinates).map((inc) => (
           <Marker 
             key={inc.id} 
-            position={[inc.lat, inc.lng]} 
+            position={[inc.location.coordinates.lat, inc.location.coordinates.lng]} 
             icon={createTacticalIcon(inc.status)}
           >
             <Popup className="tactical-popup">
               <div className="bg-slate-900 text-white p-2 rounded-lg font-sans border border-slate-700">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">{inc.id}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">{inc.incidentNumber || inc.id}</p>
                 <p className="text-xs font-bold">{inc.type}</p>
                 <div className="mt-2 flex items-center gap-2">
                   <span className={`w-1.5 h-1.5 rounded-full ${inc.status === 'detected' ? 'bg-red-500' : 'bg-amber-500'}`}></span>

@@ -10,7 +10,7 @@ export default function ResponderIncidents({ incidents = [] }) {
 
   // Use passed incidents
   const displayIncidents = incidents.map(inc => ({
-    id: inc.id,
+    id: inc.incidentNumber || inc.id,
     type: inc.type,
     status: inc.status || 'Dispatched',
     priority: inc.severity === 'high' ? 'Critical' : inc.severity === 'medium' ? 'High' : 'Normal',

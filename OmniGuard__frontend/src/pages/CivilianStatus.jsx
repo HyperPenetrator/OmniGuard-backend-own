@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function CivilianStatus({ incidents = [] }) {
   const requests = incidents.map(inc => ({
-    id: inc.id,
+    id: inc.incidentNumber || inc.id,
     type: inc.type,
     status: inc.status,
     time: 'Just now', // Could be formatted from inc.createdAt

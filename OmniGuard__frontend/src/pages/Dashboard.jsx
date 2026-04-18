@@ -3,14 +3,17 @@ import { motion } from 'framer-motion'
 import { Activity, ShieldAlert, Users, Zap, TrendingUp, Truck, CheckCircle2 } from 'lucide-react'
 import TacticalMap from '../components/TacticalMap'
 
-const stats = [
-  { label: 'Live Incidents', value: '12', icon: ShieldAlert, color: 'text-red-500', trend: '+2' },
-  { label: 'Active Responders', value: '148', icon: Users, color: 'text-emerald-500', trend: 'Stable' },
-  { label: 'System Uptime', value: '99.9%', icon: Activity, color: 'text-emerald-500', trend: 'Optimal' },
-  { label: 'Protocol Level', value: 'B-3', icon: Zap, color: 'text-amber-500', trend: 'Standard' },
-]
-
 export default function Dashboard({ incidents, onUpdateStatus }) {
+  const activeCount = incidents.length;
+  const highPriority = incidents.filter(i => i.severity === 'High' || i.severity === 'Critical').length;
+  
+  const stats = [
+    { label: 'Live Incidents', value: activeCount.toString(), icon: ShieldAlert, color: 'text-red-500', trend: 'Live' },
+    { label: 'High Priority', value: highPriority.toString(), icon: Zap, color: 'text-amber-500', trend: 'Alert' },
+    { label: 'Active Responders', value: '148', icon: Users, color: 'text-emerald-500', trend: 'Stable' },
+    { label: 'System Uptime', value: '99.9%', icon: Activity, color: 'text-emerald-500', trend: 'Optimal' },
+  ];
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -101,11 +104,13 @@ export default function Dashboard({ incidents, onUpdateStatus }) {
                             }`}>
                               {inc.severity}
                             </span>
-                            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">{inc.id}</span>
+                            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">{inc.incidentNumber || inc.id}</span>
                             <span className="text-[10px] font-mono text-slate-500 ml-auto">{inc.status === 'detected' ? 'UNRECOGNIZED_THREAT' : 'TEAM_EN_ROUTE'}</span>
                          </div>
-                         <h4 className="text-sm font-bold text-slate-700 group-hover:text-emerald-600 transition-colors uppercase">{inc.type} - Alpha Sector</h4>
-                         <p className="text-xs text-slate-500 mt-1 leading-relaxed">Incident detected at coordinates [{inc.lat.toFixed(4)}, {inc.lng.toFixed(4)}]. Immediate response required.</p>
+                         <h4 className="text-sm font-bold text-slate-700 group-hover:text-emerald-600 transition-colors uppercase">{inc.type} - {inc.location?.sector || 'Unknown Sector'}</h4>
+                         <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                           Incident detected at {inc.location?.coordinates ? `coordinates [${inc.location.coordinates.lat.toFixed(4)}, ${inc.location.coordinates.lng.toFixed(4)}]` : (inc.location?.address || 'Unknown Location')}. Immediate response required.
+                         </p>
                          
                          <div className="flex items-center gap-4 mt-6">
                             {inc.status === 'detected' ? (
