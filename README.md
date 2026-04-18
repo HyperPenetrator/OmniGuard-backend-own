@@ -1,3 +1,12 @@
+---
+title: OmniGuard-API
+emoji: 🛡️
+colorFrom: green
+colorTo: emerald
+sdk: docker
+pinned: false
+---
+
 # OmniGuard — Crisis Management System 🚨
 
 OmniGuard is an industrial-grade, real-time crisis management platform designed for the hospitality and industrial sectors. It enables rapid incident reporting, automated AI-driven triage, and seamless dispatcher coordination using geospatial tracking.
