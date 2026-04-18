@@ -68,7 +68,7 @@ async function getIncidentById(idOrNumber) {
     throw new NotFoundError('Incident');
   }
 
-  return { id: doc.id, ...doc.data() };
+  return { ...doc.data(), id: doc.id };
 }
 
 /**
@@ -130,7 +130,7 @@ async function listIncidents(options = {}) {
     finalQuery = finalQuery.limit(limit);
 
     const snapshot = await finalQuery.get();
-    const incidents = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const incidents = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 
     return { incidents, total };
   } catch (error) {
@@ -145,7 +145,7 @@ async function listIncidents(options = {}) {
       }
       
       const snapshot = await fallbackQuery.get();
-      const incidents = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const incidents = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
       return { incidents, total };
     }
     throw error;
@@ -233,7 +233,7 @@ async function updateIncidentTriage(incidentId, triageData) {
   });
 
   const updated = await docRef.get();
-  return { id: updated.id, ...updated.data() };
+  return { ...updated.data(), id: updated.id };
 }
 
 /**
@@ -319,7 +319,7 @@ async function getUserById(userId) {
   const doc = await db.collection(COLLECTIONS.USERS).doc(userId).get();
 
   if (!doc.exists) return null;
-  return { id: doc.id, ...doc.data() };
+  return { ...doc.data(), id: doc.id };
 }
 
 /**
@@ -337,7 +337,7 @@ async function getUserByEmail(email) {
 
   if (snapshot.empty) return null;
   const doc = snapshot.docs[0];
-  return { id: doc.id, ...doc.data() };
+  return { ...doc.data(), id: doc.id };
 }
 
 /**
@@ -375,7 +375,7 @@ async function listResponders(options = {}) {
   }
 
   const snapshot = await query.get();
-  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  return snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 }
 
 /**
@@ -391,7 +391,7 @@ async function getResponderById(responderId) {
     throw new NotFoundError('Responder');
   }
 
-  return { id: doc.id, ...doc.data() };
+  return { ...doc.data(), id: doc.id };
 }
 
 /**
@@ -418,7 +418,7 @@ async function updateResponderLocation(responderId, coordinates) {
   });
 
   const updated = await docRef.get();
-  return { id: updated.id, ...updated.data() };
+  return { ...updated.data(), id: updated.id };
 }
 
 /**
@@ -439,7 +439,7 @@ async function updateResponderStatus(responderId, newStatus, assignedIncidentId 
 
   await docRef.update(updateData);
   const updated = await docRef.get();
-  return { id: updated.id, ...updated.data() };
+  return { ...updated.data(), id: updated.id };
 }
 
 // ══════════════════════════════════════════════════════════
@@ -462,7 +462,7 @@ function subscribeToIncidents(callback) {
     .onSnapshot(
       (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          const data = { id: change.doc.id, ...change.doc.data() };
+          const data = { ...change.doc.data(), id: change.doc.id };
           callback(change.type, data);
         });
       },
@@ -488,7 +488,7 @@ function subscribeToResponders(callback) {
     .onSnapshot(
       (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          const data = { id: change.doc.id, ...change.doc.data() };
+          const data = { ...change.doc.data(), id: change.doc.id };
           callback(change.type, data);
         });
       },

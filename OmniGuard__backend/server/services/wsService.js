@@ -18,7 +18,7 @@ const url = require('url');
  * @returns {object} WebSocket service API
  */
 function createWsService(server, env, logger) {
-  const wss = new WebSocketServer({ server, path: '/ws' });
+  const wss = new WebSocketServer({ noServer: true });
 
   // Map of authenticated connections: ws -> { userId, role, name }
   const clients = new Map();

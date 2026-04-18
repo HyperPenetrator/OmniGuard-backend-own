@@ -80,6 +80,19 @@ async function bootstrap() {
   const wsService = createWsService(server, env, logger);
   app.locals.wsService = wsService;
 
+  // Explicitly handle WebSocket upgrades for production proxies (HF/Nginx)
+  server.on('upgrade', (request, socket, head) => {
+    const { pathname } = require('url').parse(request.url);
+
+    if (pathname === '/ws') {
+      wsService.wss.handleUpgrade(request, socket, head, (ws) => {
+        wsService.wss.emit('connection', ws, request);
+      });
+    } else {
+      socket.destroy();
+    }
+  });
+
   // 5. Start Firestore → WebSocket real-time sync (if Firebase is ready)
   let realtimeUnsubscribe = null;
   if (firebaseReady) {
