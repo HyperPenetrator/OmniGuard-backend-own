@@ -18,29 +18,12 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const USERS = [
-  {
-    email: 'admin@omniguard.test',
-    name: 'Test Admin',
-    role: 'coordinator',
-    password: 'OmniTest2026!',
-    nodeId: 'NODE-ADMIN-1',
-  },
-  {
-    email: 'fire_lead@omniguard.test',
-    name: 'Fire Lead Unit',
-    role: 'responder',
-    password: 'FirePass123',
-    assignedTeam: 'Fire',
-    nodeId: 'NODE-FIRE-1',
-  },
-  {
-    email: 'med_unit1@omniguard.test',
-    name: 'Medical Unit 1',
-    role: 'responder',
-    password: 'MedPass123',
-    assignedTeam: 'Medical',
-    nodeId: 'NODE-MED-1',
-  },
+  { email: 'coordinator@omniguard.io', password: 'omni2024!', role: 'coordinator', name: 'COMMAND ALPHA', rank: 'Commander' },
+  { email: 'medic1@omniguard.io', password: 'resp2024!', role: 'responder', name: 'UNIT M-1', assignedTeam: 'Medical', unitId: 'MED-77', status: 'Available' },
+  { email: 'fire_beta@omniguard.io', password: 'resp2024!', role: 'responder', name: 'ENGINE 4', assignedTeam: 'Fire', unitId: 'ENG-04', status: 'On Patrol' },
+  { email: 'patrol99@omniguard.io', password: 'resp2024!', role: 'responder', name: 'OFFICER 99', assignedTeam: 'Police', unitId: 'POL-99', status: 'Available' },
+  { email: 'tech_ops@omniguard.io', password: 'resp2024!', role: 'responder', name: 'HAZMAT TEAM', assignedTeam: 'Tech-Hazard', unitId: 'HAZ-01', clearance: 'Level 4' },
+  { email: 'civilian@omniguard.io', password: 'civ2024!', role: 'civilian', name: 'JANE DOE', location: 'Downtown', priority: 'Standard' },
 ];
 
 // Mock responders for geospatial display
@@ -107,9 +90,9 @@ async function seed() {
   }
 
   console.log('\n✔ Seed complete. Test credentials:');
-  console.log('  admin@omniguard.test       / OmniTest2026!');
-  console.log('  fire_lead@omniguard.test   / FirePass123');
-  console.log('  med_unit1@omniguard.test   / MedPass123');
+  for (const u of USERS) {
+    console.log(`  ${u.email.padEnd(25)} / ${u.password}`);
+  }
   console.log('');
 
   process.exit(0);

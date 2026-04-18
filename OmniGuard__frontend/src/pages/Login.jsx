@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Lock, Mail, ChevronRight, Activity, AlertCircle, Users } from 'lucide-react';
+import { login } from '../services/api';
 
 const MOCK_USERS = [
   { email: 'coordinator@omniguard.io', accessCode: 'omni2024!', role: 'coordinator', name: 'COMMAND ALPHA', rank: 'Commander' },
@@ -16,30 +17,32 @@ export default function Login({ onLogin }) {
   const [accessCode, setAccessCode] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Simulate validation delay
-    setTimeout(() => {
-      const foundUser = MOCK_USERS.find(u => u.email === email && u.accessCode === accessCode);
+    try {
+      const authData = await login(email, accessCode);
+      // authData contains { accessToken, refreshToken, user: { id, name, email, role, nodeId } }
       
-      if (!foundUser) {
-        setError('Invalid credentials or unauthorized access code.');
-        setIsLoading(false);
-        return;
-      }
-
       const userData = {
-        ...foundUser,
+        ...authData.user,
+        token: authData.accessToken,
         isAuthenticated: true
       };
 
+      // Ensure the role string matches what the frontend expects
+      if (userData.role) {
+        userData.role = userData.role.toLowerCase();
+      }
+
       onLogin(userData);
+    } catch (err) {
+      setError(err.message || 'Invalid credentials or unauthorized access code.');
+    } finally {
       setIsLoading(false);
-    }, 1200);
+    }
   };
 
   return (

@@ -20,18 +20,14 @@ import CommanderCenter from './pages/CommanderCenter'
 import MapView from './pages/MapView'
 import TacticalDashboard from './pages/TacticalDashboard'
 
-const INITIAL_INCIDENTS = [
-  { id: 'INC-701', type: 'Structural Fire', lat: 26.1445, lng: 91.7362, status: 'detected', severity: 'high' },
-  { id: 'INC-702', type: 'Medical Emergency', lat: 26.1158, lng: 91.7086, status: 'dispatched', severity: 'medium' },
-  { id: 'INC-703', type: 'Power Failure', lat: 26.1850, lng: 91.7250, status: 'detected', severity: 'low' },
-]
+import { getIncidents, closeIncident, updateIncidentStatus as apiUpdateStatus, WS_BASE } from './services/api';
 
 function App() {
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('omni_user');
     return saved ? JSON.parse(saved) : null;
   })
-  const [incidents, setIncidents] = useState(INITIAL_INCIDENTS)
+  const [incidents, setIncidents] = useState([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024)
 
   useEffect(() => {
@@ -46,6 +42,55 @@ function App() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  useEffect(() => {
+    if (!user || !user.token) return;
+
+    let ws;
+
+    const loadIncidents = async () => {
+      try {
+        const data = await getIncidents(user.token);
+        setIncidents(data || []);
+      } catch (err) {
+        console.error('Failed to load incidents', err);
+      }
+    };
+
+    const connectWebSocket = () => {
+      ws = new WebSocket(`${WS_BASE}?token=${user.token}`);
+      
+      ws.onmessage = (event) => {
+        try {
+          const msg = JSON.parse(event.data);
+          const { event: evtName, payload } = msg;
+
+          if (evtName === 'INCIDENT_CREATED') {
+            setIncidents(prev => [payload, ...prev]);
+          } else if (evtName === 'INCIDENT_UPDATED') {
+            setIncidents(prev => prev.map(inc => inc.id === payload.id ? { ...inc, ...payload } : inc));
+          } else if (evtName === 'INCIDENT_CLOSED' || evtName === 'INCIDENT_DELETED') {
+            setIncidents(prev => prev.filter(inc => inc.id !== payload.id));
+          }
+        } catch(err) {
+          console.error('WS Parse Error', err);
+        }
+      };
+      
+      ws.onerror = (err) => console.error('WebSocket Error', err);
+      ws.onclose = () => {
+        console.log('WS disconnected, reconnecting...');
+        setTimeout(connectWebSocket, 3000);
+      };
+    };
+
+    loadIncidents();
+    connectWebSocket();
+
+    return () => {
+      if (ws) ws.close();
+    };
+  }, [user]);
+
   const handleLogin = (userData) => {
     setUser(userData)
     localStorage.setItem('omni_user', JSON.stringify(userData));
@@ -58,13 +103,21 @@ function App() {
     sessionStorage.clear();
   }
 
-  const updateIncidentStatus = (id, newStatus) => {
-    if (newStatus === 'resolved') {
-      setIncidents(prev => prev.filter(inc => inc.id !== id))
-    } else {
-      setIncidents(prev => prev.map(inc => 
-        inc.id === id ? { ...inc, status: newStatus } : inc
-      ))
+  const updateIncidentStatus = async (id, newStatus) => {
+    try {
+      if (newStatus === 'resolved') {
+        // Optimistic update
+        setIncidents(prev => prev.filter(inc => inc.id !== id));
+        await closeIncident(id, user.token);
+      } else {
+        // Optimistic update
+        setIncidents(prev => prev.map(inc => 
+          inc.id === id ? { ...inc, status: newStatus } : inc
+        ));
+        await apiUpdateStatus(id, newStatus, user.token);
+      }
+    } catch (err) {
+      console.error('Failed to update incident', err);
     }
   }
 
