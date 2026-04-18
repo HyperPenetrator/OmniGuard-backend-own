@@ -19,6 +19,21 @@ export async function login(email, password) {
   return data.data; // { accessToken, user }
 }
 
+export async function createIncident(data, token) {
+  const res = await fetch(`${API_BASE}/incidents`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}` 
+    },
+    body: JSON.stringify(data)
+  });
+  
+  const resData = await res.json();
+  if (!res.ok) throw new Error(resData.error?.message || 'Failed to create incident');
+  return resData.data;
+}
+
 export async function getIncidents(token) {
   const res = await fetch(`${API_BASE}/incidents`, {
     headers: { 'Authorization': `Bearer ${token}` }

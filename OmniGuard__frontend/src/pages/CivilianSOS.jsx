@@ -3,7 +3,7 @@ import ReportEmergency from './ReportEmergency';
 import { ShieldCheck, Info } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export default function CivilianSOS() {
+export default function CivilianSOS({ token }) {
   const navigate = useNavigate();
 
   const handleSuccess = () => {
@@ -25,7 +25,7 @@ export default function CivilianSOS() {
 
          <div className="bg-white border-2 border-slate-100 rounded-[3rem] shadow-2xl shadow-slate-200/50 p-8 md:p-12 relative overflow-hidden group">
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 via-emerald-400 to-emerald-600"></div>
-            <ReportEmergency onSuccess={handleSuccess} />
+            <ReportEmergency token={token} onSuccess={handleSuccess} />
          </div>
 
          <div className="mt-10 flex items-center justify-center gap-6 px-10 text-slate-400">

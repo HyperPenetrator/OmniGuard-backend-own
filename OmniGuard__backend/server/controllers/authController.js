@@ -109,6 +109,7 @@ async function login(req, res, next) {
         email: user.email,
         role: user.role,
         nodeId: user.nodeId,
+        assignedTeam: assignedTeam,
       },
       expiresIn: env.JWT_EXPIRES_IN,
     });

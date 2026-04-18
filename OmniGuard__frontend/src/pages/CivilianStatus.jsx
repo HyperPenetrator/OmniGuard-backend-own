@@ -2,11 +2,15 @@ import React from 'react';
 import { Activity, Clock, CheckCircle2, ChevronRight, AlertCircle, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export default function CivilianStatus() {
-  const requests = [
-    { id: 'SOS-9921', type: 'Medical Assistance', status: 'Responder Dispatched', time: '12m ago', priority: 'High', sector: 'Downtown Guwahati' },
-    { id: 'SOS-8810', type: 'Fire Assistance', status: 'Resolved', time: '2d ago', priority: 'Critical', sector: 'Beltola Sector' },
-  ];
+export default function CivilianStatus({ incidents = [] }) {
+  const requests = incidents.map(inc => ({
+    id: inc.id,
+    type: inc.type,
+    status: inc.status,
+    time: 'Just now', // Could be formatted from inc.createdAt
+    priority: inc.severity || 'Medium',
+    sector: inc.location?.sector || inc.location || 'Unknown Location'
+  }));
 
   return (
     <div className="flex flex-col h-full gap-8">

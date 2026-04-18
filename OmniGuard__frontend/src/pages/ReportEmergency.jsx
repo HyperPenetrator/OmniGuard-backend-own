@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Flame, Activity, ShieldAlert, Tent, MapPin, Camera, ChevronRight, ChevronLeft, CheckCircle2, Navigation } from 'lucide-react'
+import { Flame, Activity, ShieldAlert, Tent, MapPin, Camera, ChevronRight, ChevronLeft, CheckCircle2, Navigation, Loader2 } from 'lucide-react'
+import { createIncident } from '../services/api'
 
 const incidentTypes = [
   { id: 'fire', label: 'Fire', icon: Flame, color: 'bg-rose-100 text-rose-600 border-rose-200' },
@@ -9,8 +10,9 @@ const incidentTypes = [
   { id: 'natural', label: 'Natural Disaster', icon: Tent, color: 'bg-amber-100 text-amber-600 border-amber-200' },
 ]
 
-export default function ReportEmergency({ onSuccess }) {
+export default function ReportEmergency({ token, onSuccess }) {
   const [step, setStep] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     type: '',
     location: '',
@@ -181,11 +183,27 @@ export default function ReportEmergency({ onSuccess }) {
                   Back
                 </button>
                 <button 
-                  className="py-5 bg-rose-500 text-white rounded-2xl font-bold text-lg shadow-lg shadow-rose-500/30 flex items-center justify-center gap-2 active:scale-95 transition-all"
-                  onClick={() => setStep(4)}
+                  className="py-5 bg-rose-500 text-white rounded-2xl font-bold text-lg shadow-lg shadow-rose-500/30 flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50"
+                  disabled={isSubmitting}
+                  onClick={async () => {
+                    setIsSubmitting(true);
+                    try {
+                      await createIncident({
+                        type: formData.type,
+                        location: formData.location,
+                        description: formData.description
+                      }, token);
+                      setStep(4);
+                    } catch (err) {
+                      console.error('Failed to create incident', err);
+                      alert('Failed to send SOS: ' + err.message);
+                    } finally {
+                      setIsSubmitting(false);
+                    }
+                  }}
                 >
-                  <ShieldAlert size={20} />
-                  Send SOS
+                  {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : <ShieldAlert size={20} />}
+                  {isSubmitting ? 'Sending...' : 'Send SOS'}
                 </button>
               </div>
             </motion.div>

@@ -65,11 +65,29 @@ function App() {
           const { event: evtName, payload } = msg;
 
           if (evtName === 'INCIDENT_CREATED') {
+            if (user.role === 'responder' && payload.assignedTeam && payload.assignedTeam !== user.assignedTeam) return;
+            if (user.role === 'civilian' && payload.reportedBy?.userId !== user.id) return;
             setIncidents(prev => [payload, ...prev]);
           } else if (evtName === 'INCIDENT_UPDATED') {
-            setIncidents(prev => prev.map(inc => inc.id === payload.id ? { ...inc, ...payload } : inc));
+            if (user.role === 'responder' && payload.assignedTeam && payload.assignedTeam !== user.assignedTeam) {
+              setIncidents(prev => prev.filter(inc => inc.id !== payload.incidentId));
+            } else {
+              setIncidents(prev => prev.map(inc => inc.id === payload.incidentId ? { ...inc, ...payload } : inc));
+            }
+          } else if (evtName === 'TRIAGE_COMPLETE') {
+            if (user.role === 'responder' && payload.triage.assignedTeam !== user.assignedTeam) {
+              setIncidents(prev => prev.filter(inc => inc.id !== payload.incidentId));
+            } else {
+              setIncidents(prev => prev.map(inc => 
+                inc.id === payload.incidentId ? { 
+                  ...inc, 
+                  severity: payload.triage.severity,
+                  assignedTeam: payload.triage.assignedTeam
+                } : inc
+              ));
+            }
           } else if (evtName === 'INCIDENT_CLOSED' || evtName === 'INCIDENT_DELETED') {
-            setIncidents(prev => prev.filter(inc => inc.id !== payload.id));
+            setIncidents(prev => prev.filter(inc => inc.id !== payload.incidentId));
           }
         } catch(err) {
           console.error('WS Parse Error', err);
@@ -172,7 +190,7 @@ function App() {
 
               {/* Role-Based Dashboard Root */}
               <Route path="/" element={
-                user.role === 'civilian' ? <CivilianSOS /> :
+                user.role === 'civilian' ? <CivilianSOS token={user.token} /> :
                 user.role === 'responder' ? <ResponderIncidents incidents={incidents} /> :
                 <CoordinatorDashboard incidents={incidents} onUpdateStatus={updateIncidentStatus} />
               } />
@@ -180,12 +198,12 @@ function App() {
               {/* Explicit Routes with Protection */}
               <Route path="/sos" element={
                 <ProtectedRoute user={user} allowedRoles={['civilian']}>
-                  <CivilianSOS />
+                  <CivilianSOS token={user.token} />
                 </ProtectedRoute>
               } />
               <Route path="/status" element={
                 <ProtectedRoute user={user} allowedRoles={['civilian']}>
-                  <CivilianStatus />
+                  <CivilianStatus incidents={incidents} />
                 </ProtectedRoute>
               } />
               
