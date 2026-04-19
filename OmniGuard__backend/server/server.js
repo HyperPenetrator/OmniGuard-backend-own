@@ -84,19 +84,22 @@ async function bootstrap() {
 
   // Explicitly handle WebSocket upgrades for production proxies (HF/Nginx)
   server.on('upgrade', (request, socket, head) => {
-    const { pathname } = require('url').parse(request.url);
+    const parsedUrl = require('url').parse(request.url);
+    const pathname = parsedUrl.pathname;
     const origin = request.headers.origin;
     const host = request.headers.host;
 
-    logger.info(`WS Upgrade Request: ${pathname} | Origin: ${origin} | Host: ${host}`);
+    logger.debug(`WS Upgrade Request: ${pathname} | Origin: ${origin} | Host: ${host}`);
 
-    // Simple path routing
-    if (pathname === '/ws') {
+    // Robust path routing (allow trailing slashes or variations)
+    if (pathname === '/ws' || pathname === '/ws/') {
       wsService.wss.handleUpgrade(request, socket, head, (ws) => {
         wsService.wss.emit('connection', ws, request);
       });
     } else {
       logger.warn(`WS Upgrade Rejected: Invalid path ${pathname}`);
+      // Send 404 for non-WS upgrade paths
+      socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
       socket.destroy();
     }
   });
@@ -216,6 +219,14 @@ async function bootstrap() {
   // ── Route Registration ──────────────────────────────────
 
   // Public routes (no auth required)
+  app.get('/', (req, res) => {
+    res.json({ 
+      success: true, 
+      message: 'OmniGuard Intelligence Suite API is running',
+      version: '1.0.0',
+      docs: 'https://github.com/HyperPenetrator/OmniGuard-backend-own'
+    });
+  });
   app.use('/api/health', healthRoutes);
   app.use('/api/auth', createAuthRoutes(env));
 
