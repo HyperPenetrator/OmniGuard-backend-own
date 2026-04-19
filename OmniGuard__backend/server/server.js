@@ -150,27 +150,50 @@ async function bootstrap() {
       contentSecurityPolicy: env.NODE_ENV === 'production' ? {
         directives: {
           defaultSrc: ["'self'"],
-          scriptSrc: ["'self'"],
-          connectSrc: ["'self'", 'wss:'],
+          scriptSrc: ["'self'", "'unsafe-inline'"], // Needed for some UI libraries
+          connectSrc: ["'self'", 'ws:', 'wss:', 'https://hrishikeshdutta-omniguard-api.hf.space'],
           imgSrc: ["'self'", 'data:', 'https:'],
+          frameAncestors: ["'self'", 'https://huggingface.co', 'https://*.hf.space'],
         },
       } : false,
       hsts: { maxAge: 31536000, includeSubDomains: true },
+      crossOriginEmbedderPolicy: false,
     })
   );
 
   // 6d. CORS
-  const allowedOrigins = env.FRONTEND_ORIGIN.split(',').map(o => o.trim());
+  const allowedOrigins = [
+    'https://omniguard-web.vercel.app',
+    'https://huggingface.co',
+    'https://*.hf.space'
+  ];
+  
+  if (env.FRONTEND_ORIGIN) {
+    env.FRONTEND_ORIGIN.split(',').forEach(o => allowedOrigins.push(o.trim()));
+  }
+
   app.use(
     cors({
       origin: function (origin, callback) {
         if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin)) return callback(null, true);
+        
+        // Check exact matches or wildcard for hf.space
+        const isAllowed = allowedOrigins.some(pattern => {
+          if (pattern.includes('*')) {
+            const regex = new RegExp('^' + pattern.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$');
+            return regex.test(origin);
+          }
+          return pattern === origin;
+        });
+
+        if (isAllowed) return callback(null, true);
+
         // Allow any localhost port during development
         if (env.NODE_ENV !== 'production' && origin.startsWith('http://localhost:')) {
           return callback(null, true);
         }
-        callback(new Error('Not allowed by CORS'));
+        
+        callback(new Error('Not allowed by CORS: ' + origin));
       },
       methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
