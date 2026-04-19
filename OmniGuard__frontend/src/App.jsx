@@ -89,7 +89,8 @@ function App() {
     const loadIncidents = async () => {
       try {
         const data = await getIncidents(user.token);
-        setIncidents(data || []);
+        // Backend returns paginated object { items: [], total: n }
+        setIncidents(data?.items || (Array.isArray(data) ? data : []));
       } catch (err) {
         console.error('Failed to load incidents', err);
       }

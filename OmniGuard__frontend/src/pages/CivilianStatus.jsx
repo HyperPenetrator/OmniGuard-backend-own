@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function CivilianStatus({ user, incidents = [] }) {
   // Filter incidents reported by this user
-  const userIncidents = incidents.filter(inc => inc.reportedBy === user?.id);
+  const userIncidents = incidents.filter(inc => (inc.reportedBy?.userId || inc.reportedBy) === user?.id);
 
   const requests = userIncidents.map(inc => ({
     id: inc.incidentNumber || inc.id,

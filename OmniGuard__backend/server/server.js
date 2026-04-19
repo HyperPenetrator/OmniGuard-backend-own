@@ -20,6 +20,8 @@ const { initFirebase } = require('./config/firebase');
 
 // ── Utils ──────────────────────────────────────────────────
 const { createLogger } = require('./utils/logger');
+const { sendSuccess } = require('./utils/response');
+
 
 // ── Middleware ──────────────────────────────────────────────
 const { requestIdMiddleware } = require('./middleware/requestId');

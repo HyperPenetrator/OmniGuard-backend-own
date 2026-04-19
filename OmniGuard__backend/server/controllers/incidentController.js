@@ -14,7 +14,7 @@ const {
   generateIncidentNumber,
   updateIncidentTriage,
 } = require('../services/firestoreService');
-const { triageIncident } = require('../services/triageService');
+const { triageIncident, ruleBasedTriage } = require('../services/triageService');
 const { writeAuditLog } = require('../services/auditService');
 const { getIncidentStats } = require('../services/statsService');
 const { sendSuccess, sendPaginated } = require('../utils/response');
@@ -130,6 +130,9 @@ async function create(req, res, next) {
     const logger = req.app.locals.logger;
     const env = req.app.locals.env;
 
+    // Run preliminary rule-based triage for immediate routing
+    const preTriage = ruleBasedTriage(type, (location?.sector || 'Unknown Sector'));
+
     // Build incident data
     const incidentData = {
       incidentNumber: generateIncidentNumber(),
@@ -143,14 +146,14 @@ async function create(req, res, next) {
         coordinates: location?.coordinates || (location?.lat ? { lat: location.lat, lng: location.lng } : null),
         address: location?.address || (typeof location === 'string' ? null : null),
       },
-      severity: 'Medium', // Temporary — will be updated by triage
+      severity: preTriage.severity || 'Medium',
       status: 'Reported',
       reportedBy: {
         userId: req.user.uid || req.user.userId,
         role: req.user.role,
         name: req.user.name,
       },
-      assignedTeam: assignedTeam,
+      assignedTeam: assignedTeam || preTriage.assignedTeam,
       triage: null,
       sosActive: false,
       description: description || null,
@@ -175,7 +178,7 @@ async function create(req, res, next) {
         location: incidentData.location,
         contextData: description,
         reportedBy: { role: req.user.role, name: req.user.name },
-        assignedTeam: assignedTeam,
+        assignedTeam: incidentData.assignedTeam,
       },
       env,
       logger
