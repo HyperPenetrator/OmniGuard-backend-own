@@ -101,32 +101,39 @@ function App() {
       ws.onmessage = (event) => {
         try {
           const msg = JSON.parse(event.data);
-          const { event: evtName, payload } = msg;
+          const { event: evtName, payload: rawPayload } = msg;
+
+          // Normalize payload: extract from firestore-sync wrapper if present
+          const isSync = !!rawPayload.incident;
+          const incident = isSync ? rawPayload.incident : rawPayload;
+          const incidentId = isSync ? incident.id : (rawPayload.incidentId || incident.id);
+          const assignedTeam = isSync ? incident.assignedTeam : (rawPayload.triage?.assignedTeam || incident.assignedTeam);
 
           if (evtName === 'INCIDENT_CREATED') {
-            if (user.role === 'responder' && payload.assignedTeam && payload.assignedTeam !== user.assignedTeam) return;
-            if (user.role === 'civilian' && payload.reportedBy?.userId !== user.id) return;
-            setIncidents(prev => [payload, ...prev]);
+            if (user.role === 'responder' && assignedTeam && assignedTeam !== user.assignedTeam) return;
+            if (user.role === 'civilian' && incident.reportedBy?.userId !== user.id) return;
+            setIncidents(prev => [incident, ...prev]);
           } else if (evtName === 'INCIDENT_UPDATED') {
-            if (user.role === 'responder' && payload.assignedTeam && payload.assignedTeam !== user.assignedTeam) {
-              setIncidents(prev => prev.filter(inc => inc.id !== payload.incidentId));
+            if (user.role === 'responder' && assignedTeam && assignedTeam !== user.assignedTeam) {
+              setIncidents(prev => prev.filter(inc => inc.id !== incidentId));
             } else {
-              setIncidents(prev => prev.map(inc => inc.id === payload.incidentId ? { ...inc, ...payload } : inc));
+              setIncidents(prev => prev.map(inc => inc.id === incidentId ? { ...inc, ...incident } : inc));
             }
           } else if (evtName === 'TRIAGE_COMPLETE') {
-            if (user.role === 'responder' && payload.triage.assignedTeam !== user.assignedTeam) {
-              setIncidents(prev => prev.filter(inc => inc.id !== payload.incidentId));
+            const triage = rawPayload.triage || {};
+            if (user.role === 'responder' && triage.assignedTeam !== user.assignedTeam) {
+              setIncidents(prev => prev.filter(inc => inc.id !== incidentId));
             } else {
               setIncidents(prev => prev.map(inc => 
-                inc.id === payload.incidentId ? { 
+                inc.id === incidentId ? { 
                   ...inc, 
-                  severity: payload.triage.severity,
-                  assignedTeam: payload.triage.assignedTeam
+                  severity: triage.severity,
+                  assignedTeam: triage.assignedTeam
                 } : inc
               ));
             }
           } else if (evtName === 'INCIDENT_CLOSED' || evtName === 'INCIDENT_DELETED') {
-            setIncidents(prev => prev.filter(inc => inc.id !== payload.incidentId));
+            setIncidents(prev => prev.filter(inc => inc.id !== incidentId));
           }
         } catch(err) {
           console.error('WS Parse Error', err);
