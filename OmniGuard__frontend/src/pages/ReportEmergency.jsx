@@ -106,6 +106,32 @@ export default function ReportEmergency({ token, onSuccess }) {
               
               <div className="bg-white p-4 rounded-3xl border border-slate-200">
                 <button 
+                  type="button"
+                  onClick={() => {
+                    if (navigator.geolocation) {
+                      navigator.geolocation.getCurrentPosition(
+                        (pos) => {
+                          setFormData({
+                            ...formData,
+                            location: {
+                              sector: 'GPS_LOCATED',
+                              coordinates: {
+                                lat: pos.coords.latitude,
+                                lng: pos.coords.longitude
+                              },
+                              address: `Lat: ${pos.coords.latitude.toFixed(4)}, Lng: ${pos.coords.longitude.toFixed(4)}`
+                            }
+                          });
+                        },
+                        (err) => {
+                          console.error(err);
+                          alert('Failed to get location: ' + err.message);
+                        }
+                      );
+                    } else {
+                      alert('Geolocation is not supported by this browser.');
+                    }
+                  }}
                   className="w-full py-6 bg-emerald-500 text-white rounded-2xl font-bold text-xl flex items-center justify-center gap-3 shadow-lg shadow-emerald-500/30 active:scale-95 transition-transform"
                 >
                   <Navigation size={24} fill="currentColor" />
@@ -123,7 +149,7 @@ export default function ReportEmergency({ token, onSuccess }) {
                     rows={3}
                     className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-emerald-500/50 outline-none text-lg font-medium resize-none"
                     placeholder="Enter street, district, or landmarks..."
-                    value={formData.location}
+                    value={typeof formData.location === 'string' ? formData.location : formData.location?.address || ''}
                     onChange={(e) => setFormData({...formData, location: e.target.value})}
                   />
                 </div>

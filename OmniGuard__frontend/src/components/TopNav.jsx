@@ -1,9 +1,16 @@
-import React from 'react'
-import { Bell, Search, User, Zap, Wifi, Clock, ShieldCheck, Menu } from 'lucide-react'
+import React, { useState } from 'react'
+import { Bell, Search, User, Zap, Wifi, Clock, ShieldCheck, Menu, X, AlertTriangle } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
-export default function TopNav({ user, toggleSidebar }) {
+export default function TopNav({ user, toggleSidebar, onQuickSOS }) {
+  const [showNotifications, setShowNotifications] = useState(false)
+  const [notifications, setNotifications] = useState([
+    { id: 1, title: 'System Online', message: 'Tactical network synchronization complete.', type: 'info', time: 'Just now' },
+    { id: 2, title: 'New Incident', message: 'Medical emergency reported in Sector G.', type: 'alert', time: '5m ago' }
+  ])
+
   return (
-    <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-10 sticky top-0">
+    <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-50 sticky top-0">
       <div className="flex items-center gap-4 md:gap-6">
         <button 
           onClick={toggleSidebar}
@@ -35,15 +42,72 @@ export default function TopNav({ user, toggleSidebar }) {
           </div>
         </div>
 
-        <button className="flex items-center gap-2 bg-rose-500 text-white px-5 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-rose-500/20 hover:bg-rose-600 transition-colors">
+        <button 
+          onClick={onQuickSOS}
+          className="flex items-center gap-2 bg-rose-500 text-white px-5 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-rose-500/20 hover:bg-rose-600 transition-all active:scale-95"
+        >
           <Zap size={18} fill="currentColor" />
           Quick SOS
         </button>
 
-        <button className="relative p-2 text-slate-400 hover:text-slate-600 transition-colors group">
-          <Bell size={20} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white group-hover:animate-ping"></span>
-        </button>
+        <div className="relative">
+          <button 
+            onClick={() => setShowNotifications(!showNotifications)}
+            className={`relative p-2 transition-colors group rounded-xl ${showNotifications ? 'bg-slate-100 text-slate-900' : 'text-slate-400 hover:text-slate-600'}`}
+          >
+            <Bell size={20} />
+            {notifications.length > 0 && (
+              <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white group-hover:animate-ping"></span>
+            )}
+          </button>
+
+          <AnimatePresence>
+            {showNotifications && (
+              <>
+                <div 
+                  className="fixed inset-0 z-40" 
+                  onClick={() => setShowNotifications(false)}
+                />
+                <motion.div 
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  className="absolute right-0 mt-4 w-80 bg-white rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden z-50"
+                >
+                  <div className="p-4 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
+                    <h3 className="font-bold text-slate-900 text-sm">Notifications</h3>
+                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-tighter">Live</span>
+                  </div>
+                  <div className="max-h-[400px] overflow-y-auto">
+                    {notifications.length === 0 ? (
+                      <div className="p-8 text-center text-slate-400">
+                        <p className="text-xs italic">No active tactical alerts</p>
+                      </div>
+                    ) : (
+                      notifications.map(n => (
+                        <div key={n.id} className="p-4 hover:bg-slate-50 transition-colors cursor-pointer border-b border-slate-50 group">
+                          <div className="flex gap-3">
+                            <div className={`p-2 rounded-lg h-fit ${n.type === 'alert' ? 'bg-rose-50 text-rose-500' : 'bg-blue-50 text-blue-500'}`}>
+                              {n.type === 'alert' ? <AlertTriangle size={14} /> : <ShieldCheck size={14} />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-bold text-slate-900 text-xs truncate">{n.title}</p>
+                              <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">{n.message}</p>
+                              <p className="text-[9px] text-slate-300 font-mono mt-2 uppercase tracking-widest">{n.time}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  <button className="w-full p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:bg-slate-50 hover:text-slate-600 transition-colors">
+                    Clear Tactical Feed
+                  </button>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </div>
 
         <div className="flex items-center gap-3 pl-4 border-l border-slate-100 ml-2">
           <div className="text-right flex flex-col items-end">

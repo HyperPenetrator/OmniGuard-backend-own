@@ -20,7 +20,7 @@ import CommanderCenter from './pages/CommanderCenter'
 import MapView from './pages/MapView'
 import TacticalDashboard from './pages/TacticalDashboard'
 
-import { getIncidents, closeIncident, updateIncidentStatus as apiUpdateStatus, WS_BASE } from './services/api';
+import { getIncidents, closeIncident, updateIncidentStatus as apiUpdateStatus, WS_BASE, createIncident } from './services/api';
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -29,6 +29,45 @@ function App() {
   })
   const [incidents, setIncidents] = useState([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024)
+
+  const handleQuickSOS = async () => {
+    if (!user?.token) return;
+    
+    // Quick confirmation
+    if (!window.confirm("⚠️ TRIGGER EMERGENCY SOS?\nThis will immediately dispatch tactical units to your location.")) {
+      return;
+    }
+
+    try {
+      let locationData = "QUICK_SOS_LOCATION_PENDING";
+      
+      if (navigator.geolocation) {
+        try {
+          const pos = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+          });
+          locationData = {
+            sector: 'GPS_QUICK_SOS',
+            coordinates: { lat: pos.coords.latitude, lng: pos.coords.longitude },
+            address: 'Immediate Response Requested'
+          };
+        } catch (e) {
+          console.warn('Geolocation failed for Quick SOS', e);
+        }
+      }
+
+      await createIncident({
+        type: 'Quick SOS',
+        location: locationData,
+        description: 'SYSTEM_GENERATED: Critical SOS signal triggered via TopNav Quick SOS button.'
+      }, user.token);
+      
+      alert('🚨 QUICK SOS DISPATCHED! Tactical units notified.');
+    } catch (err) {
+      console.error('Quick SOS failed', err);
+      alert('Failed to send Quick SOS: ' + err.message);
+    }
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -171,6 +210,7 @@ function App() {
             user={user} 
             isSidebarOpen={isSidebarOpen} 
             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+            onQuickSOS={handleQuickSOS}
           />
           
           <main className="flex-1 overflow-y-auto p-4 md:p-8">
