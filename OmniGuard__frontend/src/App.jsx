@@ -82,6 +82,16 @@ function App() {
   }, [])
 
   useEffect(() => {
+    const handleUnauthorized = () => {
+      console.warn('Unauthorized access detected, logging out...');
+      handleLogout();
+    };
+
+    window.addEventListener('unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('unauthorized', handleUnauthorized);
+  }, []);
+
+  useEffect(() => {
     if (!user || !user.token) return;
 
     let ws;

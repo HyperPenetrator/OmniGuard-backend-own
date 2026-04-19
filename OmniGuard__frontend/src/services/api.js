@@ -13,6 +13,10 @@ export async function login(email, password) {
     body: JSON.stringify({ email, password })
   });
   
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('unauthorized'));
+  }
+
   const data = await res.json();
   if (!res.ok) throw new Error(data.error?.message || 'Login failed');
   
@@ -29,6 +33,10 @@ export async function createIncident(data, token) {
     body: JSON.stringify(data)
   });
   
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('unauthorized'));
+  }
+
   const resData = await res.json();
   if (!res.ok) throw new Error(resData.error?.message || 'Failed to create incident');
   return resData.data;
@@ -39,6 +47,10 @@ export async function getIncidents(token) {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('unauthorized'));
+  }
+
   const data = await res.json();
   if (!res.ok) throw new Error(data.error?.message || 'Failed to fetch incidents');
   
@@ -51,6 +63,10 @@ export async function closeIncident(id, token) {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('unauthorized'));
+  }
+
   const data = await res.json();
   if (!res.ok) throw new Error(data.error?.message || 'Failed to close incident');
   return data;
@@ -66,6 +82,10 @@ export async function updateIncidentStatus(id, status, token) {
     body: JSON.stringify({ status })
   });
   
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('unauthorized'));
+  }
+
   const data = await res.json();
   if (!res.ok) throw new Error(data.error?.message || 'Failed to update status');
   return data;
