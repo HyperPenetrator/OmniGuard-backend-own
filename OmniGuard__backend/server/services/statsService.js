@@ -4,15 +4,14 @@ const COLLECTIONS = {
   INCIDENTS: 'incidents',
 };
 
-const ACTIVE_STATUSES = ['active', 'Reported', 'Triaged', 'Dispatching', 'En Route', 'On Scene'];
-const CLOSED_STATUSES = ['closed', 'Closed', 'Resolved'];
+// Title Case protocol statuses
+const ACTIVE_STATUSES = ['Reported', 'Triaged', 'Dispatching', 'En Route', 'On Scene'];
+const CLOSED_STATUSES = ['Closed', 'Resolved'];
 
 /**
  * Calculates Active and Closed incident counts based on user role.
- * If Responder -> returns counts only for their assignedTeam.
- * If Admin/Coordinator -> returns global counts across all teams.
  * 
- * @param {object} user - The authenticated user object from req.user
+ * @param {object} user - The authenticated user object
  * @returns {Promise<{active: number, closed: number}>}
  */
 async function getIncidentStats(user) {
@@ -26,10 +25,10 @@ async function getIncidentStats(user) {
     }
   }
 
-  // Using simple queries assuming index exists. If 'in' operator fails due to missing index,
-  // we would need to map/filter in memory, but 'in' is supported in Firestore.
-  const activeSnapshot = await baseQuery.where('status', 'in', ACTIVE_STATUSES).select().get();
-  const closedSnapshot = await baseQuery.where('status', 'in', CLOSED_STATUSES).select().get();
+  const [activeSnapshot, closedSnapshot] = await Promise.all([
+    baseQuery.where('status', 'in', ACTIVE_STATUSES).select().get(),
+    baseQuery.where('status', 'in', CLOSED_STATUSES).select().get()
+  ]);
 
   return {
     active: activeSnapshot.size,
@@ -43,8 +42,11 @@ async function getIncidentStats(user) {
 async function getGlobalStats() {
   const db = getDb();
   const baseQuery = db.collection(COLLECTIONS.INCIDENTS).where('softDeleted', '==', false);
-  const activeSnapshot = await baseQuery.where('status', 'in', ACTIVE_STATUSES).select().get();
-  const closedSnapshot = await baseQuery.where('status', 'in', CLOSED_STATUSES).select().get();
+  
+  const [activeSnapshot, closedSnapshot] = await Promise.all([
+    baseQuery.where('status', 'in', ACTIVE_STATUSES).select().get(),
+    baseQuery.where('status', 'in', CLOSED_STATUSES).select().get()
+  ]);
   
   return {
     active: activeSnapshot.size,
@@ -56,13 +58,17 @@ async function getGlobalStats() {
  * Team-specific stats calculator for WebSocket broadcast
  */
 async function getTeamStats(teamId) {
+  if (!teamId) return { active: 0, closed: 0 };
+
   const db = getDb();
   const baseQuery = db.collection(COLLECTIONS.INCIDENTS)
     .where('softDeleted', '==', false)
     .where('assignedTeam', '==', teamId);
     
-  const activeSnapshot = await baseQuery.where('status', 'in', ACTIVE_STATUSES).select().get();
-  const closedSnapshot = await baseQuery.where('status', 'in', CLOSED_STATUSES).select().get();
+  const [activeSnapshot, closedSnapshot] = await Promise.all([
+    baseQuery.where('status', 'in', ACTIVE_STATUSES).select().get(),
+    baseQuery.where('status', 'in', CLOSED_STATUSES).select().get()
+  ]);
   
   return {
     active: activeSnapshot.size,

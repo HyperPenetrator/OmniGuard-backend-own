@@ -292,15 +292,6 @@ async function remove(req, res, next) {
       previousState,
     });
 
-    // WebSocket broadcast (coordinators only)
-    const wsService = req.app.locals.wsService;
-    if (wsService) {
-      wsService.broadcastToRole('coordinator', 'INCIDENT_DELETED', {
-        incidentId: req.params.id,
-        deletedBy: req.user.name,
-      });
-    }
-
     sendSuccess(res, { message: 'Incident deleted', incidentId: req.params.id });
   } catch (error) {
     next(error);

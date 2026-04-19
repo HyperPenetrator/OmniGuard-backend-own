@@ -22,7 +22,6 @@ const { initFirebase } = require('./config/firebase');
 const { createLogger } = require('./utils/logger');
 const { sendSuccess } = require('./utils/response');
 
-
 // ── Middleware ──────────────────────────────────────────────
 const { requestIdMiddleware } = require('./middleware/requestId');
 const { createAuthMiddleware } = require('./middleware/auth');
@@ -41,22 +40,22 @@ const triageRoutes = require('./routes/triage');
 const { createWsService } = require('./services/wsService');
 const { startRealtimeSync } = require('./services/realtimeSync');
 
-// ═══════════════════════════════════════════════════════════
-//  BOOTSTRAP
-// ═══════════════════════════════════════════════════════════
+// ── Config & Middleware ────────────────────────────────────
+const { getSecurityConfig } = require('./config/security');
+const { createRequestLogger } = require('./middleware/requestLogger');
 
+/**
+ * Main Application Bootstrap
+ */
 async function bootstrap() {
-  // 1. Validate environment
   const env = loadEnv();
   const logger = createLogger(env);
 
   logger.info('╔══════════════════════════════════════════╗');
   logger.info('║   OmniGuard API Server — Initializing    ║');
   logger.info('╚══════════════════════════════════════════╝');
-  logger.info(`Environment: ${env.NODE_ENV}`);
-  logger.info(`Port: ${env.PORT}`);
 
-  // 2. Initialize Firebase
+  // 1. Initialize Core Services
   let firebaseReady = false;
   try {
     initFirebase(env);
@@ -64,47 +63,18 @@ async function bootstrap() {
     logger.info('✔ Firebase Admin SDK initialized');
   } catch (error) {
     logger.error('✖ Firebase initialization failed', { error: error.message });
-    logger.warn('Server starting in degraded mode — database operations will fail');
   }
 
-  // 3. Create Express app
   const app = express();
   const server = http.createServer(app);
-
-  // Store env and logger in app.locals for access in routes/middleware
+  const wsService = createWsService(server, env, logger);
+  
   app.locals.env = env;
   app.locals.logger = logger;
-
-  // Trust proxy (needed for rate limiter behind reverse proxy)
+  app.locals.wsService = wsService;
   app.set('trust proxy', 1);
 
-  // 4. Initialize WebSocket service
-  const wsService = createWsService(server, env, logger);
-  app.locals.wsService = wsService;
-
-  // Explicitly handle WebSocket upgrades for production proxies (HF/Nginx)
-  server.on('upgrade', (request, socket, head) => {
-    const parsedUrl = require('url').parse(request.url);
-    const pathname = parsedUrl.pathname;
-    const origin = request.headers.origin;
-    const host = request.headers.host;
-
-    logger.debug(`WS Upgrade Request: ${pathname} | Origin: ${origin} | Host: ${host}`);
-
-    // Robust path routing (allow trailing slashes or variations)
-    if (pathname === '/ws' || pathname === '/ws/') {
-      wsService.wss.handleUpgrade(request, socket, head, (ws) => {
-        wsService.wss.emit('connection', ws, request);
-      });
-    } else {
-      logger.warn(`WS Upgrade Rejected: Invalid path ${pathname}`);
-      // Send 404 for non-WS upgrade paths
-      socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
-      socket.destroy();
-    }
-  });
-
-  // 5. Start Firestore → WebSocket real-time sync (if Firebase is ready)
+  // 2. Real-time Synchronization
   let realtimeUnsubscribe = null;
   if (firebaseReady) {
     try {
@@ -114,129 +84,56 @@ async function bootstrap() {
     }
   }
 
-  // ── JWT Auth Middleware (created once, reused) ──────────
+  // 3. Global Middleware Pipeline
+  const { allowedOrigins, helmetConfig } = getSecurityConfig(env);
   const verifyToken = createAuthMiddleware(env);
 
-  // ── Global Middleware Stack (ORDER MATTERS) ──────────────
-
-  // 6a. Request ID — must be first for log correlation
   app.use(requestIdMiddleware);
-
-  // 6b. Request logging
-  app.use((req, res, next) => {
-    const start = Date.now();
-    res.on('finish', () => {
-      const duration = Date.now() - start;
-      const logData = {
-        requestId: req.requestId,
-        method: req.method,
-        path: req.originalUrl,
-        status: res.statusCode,
-        durationMs: duration,
-        ip: req.ip,
-      };
-
-      if (res.statusCode >= 500) {
-        logger.error(`${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`, logData);
-      } else if (res.statusCode >= 400) {
-        logger.warn(`${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`, logData);
-      } else {
-        logger.info(`${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms`, logData);
-      }
-    });
-    next();
-  });
-
-  // 6c. Security headers
-  app.use(
-    helmet({
-      contentSecurityPolicy: env.NODE_ENV === 'production' ? {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'"], // Needed for some UI libraries
-          connectSrc: ["'self'", 'ws:', 'wss:', 'https://hrishikeshdutta-omniguard-api.hf.space'],
-          imgSrc: ["'self'", 'data:', 'https:'],
-          frameAncestors: ["'self'", 'https://huggingface.co', 'https://*.hf.space'],
-        },
-      } : false,
-      hsts: { maxAge: 31536000, includeSubDomains: true },
-      crossOriginEmbedderPolicy: false,
-    })
-  );
-
-  // 6d. CORS
-  const allowedOrigins = [
-    'https://omniguard-web.vercel.app',
-    'https://*.vercel.app',
-    'https://huggingface.co',
-    'https://*.hf.space'
-  ];
-  
-  if (env.FRONTEND_ORIGIN) {
-    env.FRONTEND_ORIGIN.split(',').forEach(o => allowedOrigins.push(o.trim()));
-  }
-
-  app.use(
-    cors({
-      origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-        
-        // Check exact matches or wildcard for hf.space
-        const isAllowed = allowedOrigins.some(pattern => {
-          if (pattern.includes('*')) {
-            const regex = new RegExp('^' + pattern.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$');
-            return regex.test(origin);
-          }
-          return pattern === origin;
-        });
-
-        if (isAllowed) return callback(null, true);
-
-        // Allow any localhost port during development
-        if (env.NODE_ENV !== 'production' && origin.startsWith('http://localhost:')) {
-          return callback(null, true);
+  app.use(createRequestLogger(logger));
+  app.use(helmet(helmetConfig));
+  app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const isAllowed = allowedOrigins.some(pattern => {
+        if (pattern.includes('*')) {
+          const regex = new RegExp('^' + pattern.replace(/\./g, '\\.').replace(/\*/g, '.*') + '$');
+          return regex.test(origin);
         }
-        
-        callback(new Error('Not allowed by CORS: ' + origin));
-      },
-      methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
-      exposedHeaders: ['X-Request-ID'],
-      credentials: true,
-      maxAge: 86400,
-    })
-  );
+        return pattern === origin;
+      });
+      if (isAllowed || (env.NODE_ENV !== 'production' && origin.startsWith('http://localhost:'))) {
+        return callback(null, true);
+      }
+      callback(new Error(`Not allowed by CORS: ${origin}`));
+    },
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+    exposedHeaders: ['X-Request-ID'],
+    credentials: true,
+    maxAge: 86400,
+  }));
 
-  // 6e. Body parsers
   app.use(express.json({ limit: '1mb' }));
   app.use(express.urlencoded({ extended: true, limit: '1mb' }));
-
-  // 6f. Rate limiting (on all /api routes)
   app.use('/api/', createGlobalLimiter(env));
-
-  // 6g. Input sanitization (XSS)
   app.use(sanitizeMiddleware);
 
-  // ── Route Registration ──────────────────────────────────
-
-  // Public routes (no auth required)
+  // 4. API Routes
   app.get('/', (req, res) => {
     res.json({ 
       success: true, 
       message: 'OmniGuard Intelligence Suite API is running',
-      version: '1.0.0',
-      docs: 'https://github.com/HyperPenetrator/OmniGuard-backend-own'
+      version: '1.0.0'
     });
   });
+
   app.use('/api/health', healthRoutes);
   app.use('/api/auth', createAuthRoutes(env));
-
-  // Protected routes (JWT required)
   app.use('/api/incidents', verifyToken, incidentRoutes);
   app.use('/api/responders', verifyToken, responderRoutes);
   app.use('/api/triage', verifyToken, triageRoutes);
 
-  // WebSocket health endpoint (coordinator only, but no auth for simplicity)
+  // WebSocket health (internal diagnostic)
   app.get('/api/ws/health', (req, res) => {
     sendSuccess(res, {
       activeConnections: wsService.getConnectionCount(),
@@ -244,8 +141,20 @@ async function bootstrap() {
     });
   });
 
-  // ── 404 + Global Error Handler (MUST BE LAST) ──────────
+  // 5. Upgrade Handler for WebSockets
+  server.on('upgrade', (request, socket, head) => {
+    const { pathname } = require('url').parse(request.url);
+    if (pathname === '/ws' || pathname === '/ws/') {
+      wsService.wss.handleUpgrade(request, socket, head, (ws) => {
+        wsService.wss.emit('connection', ws, request);
+      });
+    } else {
+      socket.write('HTTP/1.1 404 Not Found\r\n\r\n');
+      socket.destroy();
+    }
+  });
 
+  // 6. Error Handling
   app.use(notFoundHandler);
   app.use(createErrorHandler(logger, env.NODE_ENV));
 

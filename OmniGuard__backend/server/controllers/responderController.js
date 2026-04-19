@@ -66,18 +66,6 @@ async function updateLocation(req, res, next) {
       updatedBy: req.user.userId,
     });
 
-    // WebSocket: broadcast to coordinators
-    const wsService = req.app.locals.wsService;
-    if (wsService) {
-      wsService.broadcastToRole('coordinator', 'RESPONDER_LOCATION_UPDATE', {
-        responderId: req.params.id,
-        name: updated.name,
-        lat,
-        lng,
-        updatedAt: new Date().toISOString(),
-      });
-    }
-
     sendSuccess(res, updated);
   } catch (error) {
     next(error);

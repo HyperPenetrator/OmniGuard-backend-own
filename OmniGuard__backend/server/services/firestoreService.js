@@ -153,40 +153,8 @@ async function listIncidents(options = {}) {
 }
 
 /**
- * Get threat statistics for a specific team.
- * @param {string} teamId
- * @returns {Promise<{ active: number, closed: number }>}
- */
-async function getTeamStats(teamId) {
-  const db = getDb();
-  
-  // Query all non-terminal statuses (Title Case protocol)
-  const ACTIVE_STATUSES = ['Reported', 'Triaged', 'Dispatching', 'En Route', 'On Scene'];
-  
-  // Firestore 'in' queries support up to 10 values
-  const activeSnapshot = await db.collection(COLLECTIONS.INCIDENTS)
-    .where('softDeleted', '==', false)
-    .where('assignedTeam', '==', teamId)
-    .where('status', 'in', ACTIVE_STATUSES)
-    .select()
-    .get();
-    
-  const closedSnapshot = await db.collection(COLLECTIONS.INCIDENTS)
-    .where('softDeleted', '==', false)
-    .where('assignedTeam', '==', teamId)
-    .where('status', 'in', ['Closed', 'Resolved'])
-    .select()
-    .get();
-
-  return {
-    active: activeSnapshot.size,
-    closed: closedSnapshot.size
-  };
-}
-
-/**
  * Update an incident's status.
- * @param {string} incidentId
+ * @param {string} idOrNumber
  * @param {string} newStatus
  * @param {string} [assignedTeam]
  * @returns {Promise<object>} Updated incident
@@ -511,7 +479,6 @@ module.exports = {
   createIncident,
   getIncidentById,
   listIncidents,
-  getTeamStats,
   updateIncidentStatus,
   updateIncidentTriage,
   softDeleteIncident,
