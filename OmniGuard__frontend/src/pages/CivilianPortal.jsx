@@ -138,17 +138,17 @@ export default function CivilianPortal({ onLogin }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 md:mb-12"
         >
           {emergencyNumbers.map((e) => (
             <a
               key={e.label}
               href={`tel:${e.number}`}
-              className={`${e.color} text-white p-5 rounded-2xl flex flex-col items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg`}
+              className={`${e.color} text-white p-4 md:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg`}
             >
-              <Phone size={24} fill="currentColor" />
-              <span className="font-black text-2xl">{e.number}</span>
-              <span className="text-xs font-bold uppercase tracking-widest opacity-80">{e.label}</span>
+              <Phone size={20} className="md:size-24" fill="currentColor" />
+              <span className="font-black text-xl md:text-2xl">{e.number}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">{e.label}</span>
             </a>
           ))}
         </motion.div>
@@ -158,36 +158,36 @@ export default function CivilianPortal({ onLogin }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-3xl border border-slate-200 shadow-xl p-10 text-center mb-12"
+          className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 md:p-10 text-center mb-12"
         >
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-rose-500 rounded-3xl shadow-2xl shadow-rose-500/30 mb-6">
-            <ShieldAlert size={40} className="text-white" />
+          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-rose-500 rounded-3xl shadow-2xl shadow-rose-500/30 mb-6">
+            <ShieldAlert size={32} className="text-white md:size-40" />
           </div>
-          <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-4">
+          <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-4">
             Report an Emergency Now
           </h2>
-          <p className="text-slate-500 font-medium max-w-lg mx-auto mb-8 leading-relaxed">
+          <p className="text-slate-500 text-sm md:text-base font-medium max-w-lg mx-auto mb-8 leading-relaxed">
             Use our guided 3-step form to report fire, medical emergencies, crimes, or natural disasters. No login required.
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-10">
             {reportTypes.map((t) => (
               <button
                 key={t.label}
                 onClick={() => navigate(`/report?type=${encodeURIComponent(t.label)}`)}
-                className={`p-4 rounded-2xl flex flex-col items-center gap-2 ${t.color.split(' ')[1]} border border-slate-100 cursor-pointer hover:scale-105 hover:shadow-md transition-all active:scale-95`}
+                className={`p-3 md:p-4 rounded-2xl flex flex-col items-center gap-2 ${t.color.split(' ')[1]} border border-slate-100 cursor-pointer hover:scale-105 hover:shadow-md transition-all active:scale-95`}
               >
-                <t.icon size={28} className={t.color.split(' ')[0]} />
-                <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">{t.label}</span>
+                <t.icon size={24} className={`${t.color.split(' ')[0]} md:size-28`} />
+                <span className="text-[10px] md:text-xs font-bold text-slate-700 uppercase tracking-wider">{t.label}</span>
               </button>
             ))}
           </div>
           <button
             onClick={() => navigate('/report')}
-            className="inline-flex items-center gap-3 bg-rose-500 text-white px-10 py-5 rounded-2xl font-black text-lg shadow-2xl shadow-rose-500/30 hover:bg-rose-600 transition-all active:scale-95"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-rose-500 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-base md:text-lg shadow-2xl shadow-rose-500/30 hover:bg-rose-600 transition-all active:scale-95"
           >
-            <ShieldAlert size={24} />
+            <ShieldAlert size={20} className="md:size-24" />
             Report Emergency
-            <ChevronRight size={20} />
+            <ChevronRight size={18} className="md:size-20" />
           </button>
         </motion.div>
 

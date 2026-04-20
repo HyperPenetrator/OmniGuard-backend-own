@@ -52,10 +52,10 @@ export default function TopNav({ user, toggleSidebar, onQuickSOS, incidents = []
 
         <button 
           onClick={onQuickSOS}
-          className="flex items-center gap-2 bg-rose-500 text-white px-5 py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-rose-500/20 hover:bg-rose-600 transition-all active:scale-95"
+          className="flex items-center gap-2 bg-rose-500 text-white p-2.5 md:px-5 md:py-2.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-lg shadow-rose-500/20 hover:bg-rose-600 transition-all active:scale-95"
         >
           <Zap size={18} fill="currentColor" />
-          Quick SOS
+          <span className="hidden md:inline">Quick SOS</span>
         </button>
 
         <div className="relative">
@@ -80,7 +80,7 @@ export default function TopNav({ user, toggleSidebar, onQuickSOS, incidents = []
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 mt-4 w-80 bg-white rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden z-50"
+                  className="absolute right-0 mt-4 w-[calc(100vw-2rem)] md:w-80 bg-white rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden z-50"
                 >
                   <div className="p-4 border-b border-slate-50 bg-slate-50/50 flex items-center justify-between">
                     <h3 className="font-bold text-slate-900 text-sm">Notifications</h3>
@@ -117,13 +117,13 @@ export default function TopNav({ user, toggleSidebar, onQuickSOS, incidents = []
           </AnimatePresence>
         </div>
 
-        <div className="flex items-center gap-3 pl-4 border-l border-slate-100 ml-2">
-          <div className="text-right flex flex-col items-end">
+        <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-slate-100 ml-1 md:ml-2">
+          <div className="hidden sm:flex text-right flex-col items-end">
             <p className="text-xs font-bold text-slate-900 uppercase tracking-wider">{user?.name || 'Operator ID'}</p>
             <p className="text-[9px] text-emerald-500 font-mono uppercase font-bold">{user?.role || 'Guest'} Access</p>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center border border-slate-200 group-hover:border-emerald-500 transition-colors overflow-hidden">
-             {user?.role === 'coordinator' ? <ShieldCheck className="text-emerald-500" size={24} /> : <User className="text-slate-400" size={24} />}
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-slate-100 flex items-center justify-center border border-slate-200 group-hover:border-emerald-500 transition-colors overflow-hidden">
+             {user?.role === 'coordinator' ? <ShieldCheck className="text-emerald-500" size={18} className="md:size-24" /> : <User className="text-slate-400" size={18} className="md:size-24" />}
           </div>
         </div>
       </div>

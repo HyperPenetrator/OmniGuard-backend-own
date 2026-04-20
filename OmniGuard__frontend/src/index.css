@@ -16,9 +16,10 @@
 
 @layer base {
   body {
-    @apply text-slate-300 font-sans antialiased overflow-hidden selection:bg-brand-primary/30 selection:text-white;
+    @apply text-slate-300 font-sans antialiased selection:bg-brand-primary/30 selection:text-white;
     background: radial-gradient(circle at 50% 50%, var(--color-brand-bg-start) 0%, var(--color-brand-bg-end) 100%);
     min-height: 100vh;
+    overflow-x: hidden;
   }
 }
 
