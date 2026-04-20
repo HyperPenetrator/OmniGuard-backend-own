@@ -1,6 +1,6 @@
-const DEV_HOST = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) 
-  ? 'localhost' 
-  : '10.0.2.2';
+const DEV_HOST = (typeof window !== 'undefined' && window.Capacitor) 
+  ? '10.0.2.2' 
+  : 'localhost';
 
 export const API_BASE = import.meta.env.PROD 
   ? 'https://hrishikeshdutta-omniguard-api.hf.space/api' 
