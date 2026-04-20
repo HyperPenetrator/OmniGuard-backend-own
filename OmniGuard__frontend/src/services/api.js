@@ -9,6 +9,25 @@ export const WS_BASE = import.meta.env.PROD
   ? 'wss://hrishikeshdutta-omniguard-api.hf.space/ws' 
   : `ws://${DEV_HOST}:3001/ws`;
 
+async function handleResponse(res, errorMessage) {
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('unauthorized'));
+  }
+
+  const contentType = res.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || errorMessage);
+    return data;
+  } else {
+    const text = await res.text();
+    if (text.includes('Your space') || text.includes('sleeping')) {
+      throw new Error('OmniGuard Intelligence Suite is currently initializing. Please try again in 30 seconds.');
+    }
+    throw new Error('Communication error with secure uplink. Please check your connection.');
+  }
+}
+
 export async function login(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
@@ -16,13 +35,7 @@ export async function login(email, password) {
     body: JSON.stringify({ email, password })
   });
   
-  if (res.status === 401) {
-    window.dispatchEvent(new CustomEvent('unauthorized'));
-  }
-
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || 'Login failed');
-  
+  const data = await handleResponse(res, 'Login failed');
   return data.data; // { accessToken, user }
 }
 
@@ -41,12 +54,7 @@ export async function createIncident(data, token) {
     body: JSON.stringify(data)
   });
   
-  if (res.status === 401 && !isPublic) {
-    window.dispatchEvent(new CustomEvent('unauthorized'));
-  }
-
-  const resData = await res.json();
-  if (!res.ok) throw new Error(resData.error?.message || 'Failed to create incident');
+  const resData = await handleResponse(res, 'Failed to create incident');
   return resData.data;
 }
 
@@ -55,13 +63,7 @@ export async function getIncidents(token) {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   
-  if (res.status === 401) {
-    window.dispatchEvent(new CustomEvent('unauthorized'));
-  }
-
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || 'Failed to fetch incidents');
-  
+  const data = await handleResponse(res, 'Failed to fetch incidents');
   return data.data;
 }
 
@@ -71,13 +73,7 @@ export async function closeIncident(id, token) {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   
-  if (res.status === 401) {
-    window.dispatchEvent(new CustomEvent('unauthorized'));
-  }
-
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || 'Failed to close incident');
-  return data;
+  return handleResponse(res, 'Failed to close incident');
 }
 
 export async function updateIncidentStatus(id, status, token) {
@@ -90,13 +86,7 @@ export async function updateIncidentStatus(id, status, token) {
     body: JSON.stringify({ status })
   });
   
-  if (res.status === 401) {
-    window.dispatchEvent(new CustomEvent('unauthorized'));
-  }
-
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || 'Failed to update status');
-  return data;
+  return handleResponse(res, 'Failed to update status');
 }
 
 export async function getStats(token) {
@@ -104,12 +94,7 @@ export async function getStats(token) {
     headers: { 'Authorization': `Bearer ${token}` }
   });
   
-  if (res.status === 401) {
-    window.dispatchEvent(new CustomEvent('unauthorized'));
-  }
-
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || 'Failed to fetch stats');
+  const data = await handleResponse(res, 'Failed to fetch stats');
   return data.data;
 }
 
