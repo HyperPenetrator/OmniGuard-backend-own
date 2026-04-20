@@ -16,7 +16,8 @@ const menuItems = {
     { id: 'profile', icon: User, label: 'Civilian ID', path: '/profile' },
   ],
   responder: [
-    { id: 'incidents', icon: ShieldAlert, label: 'Active Incidents', path: '/incidents' },
+    { id: 'dashboard', icon: LayoutDashboard, label: 'Unit Dashboard', path: '/' },
+    { id: 'incidents', icon: ShieldAlert, label: 'Task List', path: '/incidents' },
     { id: 'maps', icon: MapPin, label: 'Navigation Map', path: '/maps' },
     { id: 'profile', icon: User, label: 'Responder ID', path: '/profile' },
   ],

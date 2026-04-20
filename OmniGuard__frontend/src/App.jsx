@@ -19,6 +19,7 @@ import ActiveThreats from './pages/ActiveThreats'
 import CommanderCenter from './pages/CommanderCenter'
 import MapView from './pages/MapView'
 import TacticalDashboard from './pages/TacticalDashboard'
+import TeamDashboard from './pages/TeamDashboard'
 import CivilianPortal from './pages/CivilianPortal'
 import PublicReport from './pages/PublicReport'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -299,7 +300,7 @@ function App() {
                 {/* Role-Based Dashboard Root */}
                 <Route path="/" element={
                   user.role === 'civilian' ? <CivilianSOS token={user.token} /> :
-                  user.role === 'responder' ? <ResponderIncidents user={user} incidents={incidents} /> :
+                  user.role === 'responder' ? <TeamDashboard user={user} incidents={incidents} onUpdateStatus={updateIncidentStatus} /> :
                   <CoordinatorDashboard incidents={incidents} onUpdateStatus={updateIncidentStatus} />
                 } />
 
