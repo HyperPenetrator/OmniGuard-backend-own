@@ -1,3 +1,4 @@
+[![Android Build](https://github.com/HyperPenetrator/OmniGuard-backend-own/actions/workflows/android-build.yml/badge.svg)](https://github.com/HyperPenetrator/OmniGuard-backend-own/actions/workflows/android-build.yml)[![OmniGuard CI](https://github.com/HyperPenetrator/OmniGuard-backend-own/actions/workflows/ci.yml/badge.svg)](https://github.com/HyperPenetrator/OmniGuard-backend-own/actions/workflows/ci.yml)
 # OmniGuard — Tactical Crisis Command & Intelligence 🛡️
 
 OmniGuard is a high-fidelity, real-time crisis management platform designed for enterprise industrial and hospitality sectors. It unifies distributed incident reporting, automated AI-driven triage (Gemini 1.5 Flash), and responder tactical routing into a single mission-critical ecosystem.
