@@ -20,9 +20,12 @@ if (process.env.NODE_ENV === 'production') {
 const USERS = [
   { email: 'coordinator@omniguard.io', password: 'omni2024!', role: 'coordinator', name: 'COMMAND ALPHA', rank: 'Commander' },
   { email: 'medic1@omniguard.io', password: 'resp2024!', role: 'responder', name: 'UNIT M-1', assignedTeam: 'Medical', unitId: 'MED-77', status: 'Available' },
+  { email: 'fire_commander@omniguard.io', password: 'resp2024!', role: 'responder', name: 'FIRE CHIEF 1', assignedTeam: 'Fire', unitId: 'FIRE-01', status: 'Available' },
+  { email: 'crime_chief@omniguard.io', password: 'resp2024!', role: 'responder', name: 'CHIEF DETECTIVE', assignedTeam: 'Police', unitId: 'CRIME-99', status: 'Available' },
+  { email: 'disaster_lead@omniguard.io', password: 'resp2024!', role: 'responder', name: 'HAZMAT LEAD', assignedTeam: 'Tech-Hazard', unitId: 'HAZ-01', status: 'Available' },
   { email: 'fire_beta@omniguard.io', password: 'resp2024!', role: 'responder', name: 'ENGINE 4', assignedTeam: 'Fire', unitId: 'ENG-04', status: 'On Patrol' },
   { email: 'patrol99@omniguard.io', password: 'resp2024!', role: 'responder', name: 'OFFICER 99', assignedTeam: 'Police', unitId: 'POL-99', status: 'Available' },
-  { email: 'tech_ops@omniguard.io', password: 'resp2024!', role: 'responder', name: 'HAZMAT TEAM', assignedTeam: 'Tech-Hazard', unitId: 'HAZ-01', clearance: 'Level 4' },
+  { email: 'tech_ops@omniguard.io', password: 'resp2024!', role: 'responder', name: 'HAZMAT TEAM', assignedTeam: 'Tech-Hazard', unitId: 'HAZ-02', clearance: 'Level 4' },
   { email: 'civilian@omniguard.io', password: 'civ2024!', role: 'civilian', name: 'JANE DOE', location: 'Downtown', priority: 'Standard' },
 ];
 

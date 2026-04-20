@@ -1,35 +1,46 @@
-# OmniGuard__backend
+# OmniGuard — Central Command API (Backend) 📡
 
-## Testing & QA
+The high-performance core of the OmniGuard ecosystem. This backend handles real-time data persistence, AI-driven triage, and secure incident orchestration.
 
-To facilitate manual testing and validation of the Role-Based Access Control (RBAC) and Geospatial Triage systems, several mock accounts have been seeded into the database.
+## 🔑 System Access & Development Credentials
 
-### Mock Credentials
+The following credentials are pre-seeded via `scripts/seed-users.js` for tactical verification.
 
-| Role | Team | Username/Email | Password (default) |
+| Team Role | User ID (Email) | Access Code (Password) | Permissions |
 | :--- | :--- | :--- | :--- |
-| Admin | All | `admin@omniguard.test` | `OmniTest2026!` |
-| Responder | Fire | `fire_lead@omniguard.test` | `FirePass123` |
-| Responder | Medical | `med_unit1@omniguard.test` | `MedPass123` |
+| **Admin Strategist** | `coordinator@omniguard.io` | `omni2024!` | Global Triage & Team Stats |
+| **Fire Team Lead** | `fire_commander@omniguard.io` | `resp2024!` | Fire Suppression Dashboard |
+| **Crime Team Lead** | `crime_chief@omniguard.io` | `resp2024!` | Security Response View |
+| **Disaster Lead** | `disaster_lead@omniguard.io` | `resp2024!` | Disaster Management |
+| **Medic Unit M-1** | `medic1@omniguard.io` | `resp2024!` | Medical Response Dashboard |
+| **Civilian Portal** | `civilian@omniguard.io` | `civ2024!` | Basic Safety Access |
 
-*Note: You can re-seed these credentials at any time by running `npm run node server/scripts/seed-users.js`.*
+*Note: Run `npm run node server/scripts/seed-users.js` to reset the database state.*
 
-### Testing the 5km Geospatial Triage Logic
+## 🗺️ Geospatial Intelligence Engine
 
-The system is equipped with an automated geospatial triage engine. When a new incident is reported, the backend uses the Haversine formula to identify all active responders matching the AI-assigned incident type. 
+The backend utilizes a high-frequency **Geospatial Triage Engine** to automate dispatcher logic.
 
-**Only responders within a strict 5.0 km radius** of the incident coordinates will receive the high-priority `NEW_INCIDENT_NEARBY` WebSocket broadcast.
+- **Proximity Logic**: Uses the **Haversine Formula** for precise spherical distance calculations.
+- **Broadcast Radius**: Standard alert threshold is **5.0 km**.
+- **Real-Time Pipeline**: Changes in incident status or responder location trigger immediate WebSocket broadcasts via the `wsService`.
 
-#### How to Simulate a "Scream" Event
-To manually verify this functionality without using the frontend UI, you can use the integrated Digital Twin Simulation script. This script mocks a "Duress Trigger" (Scream event) at the center of Gauhati University (Coordinates: `26.1558, 91.6622`) and simulates live patrol movements.
+## 🧪 Simulation & Validation
 
-Run the simulation from the `server/` directory:
+### 1. Digital Twin Simulation
+To verify the 5km triage logic without a manual frontend trigger:
 ```bash
+cd server
 node scripts/simulate-movement.js
 ```
+This script mocks a high-priority incident and simulates live patrol units moving within and out of the triage radius.
 
-**Expected Behavior:**
-1. The script triggers a new incident and passes the context to the Gemini AI.
-2. Gemini classifies the event as a `Police` priority.
-3. The script continuously logs a live console table jittering the mock responders' locations.
-4. Only responders assigned to the `Police` team **AND** currently $< 5.0$ km from Gauhati University will be flagged as `Is Notified: Y`.
+### 2. Integration Testing
+```bash
+cd server
+npm test               # Core logic validation
+node scripts/e2e-test.js # Full WebSocket/Firestore pipeline
+```
+
+---
+© 2026 OmniGuard Systems • Authorized Developers Only
