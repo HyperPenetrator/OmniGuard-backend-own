@@ -21,17 +21,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
-          cache-dependency-path: OmniGuard__frontend/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install Dependencies
-        working-directory: OmniGuard__frontend
         run: npm ci
 
       - name: Build Web App
-        working-directory: OmniGuard__frontend
-        run: npm run build
+        run: npm run build -w omniguard-frontend
 
       - name: Sync Capacitor
         working-directory: OmniGuard__frontend

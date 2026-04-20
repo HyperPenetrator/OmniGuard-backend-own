@@ -27,9 +27,8 @@ function cn(...inputs) {
 }
 
 import { getIncidents, closeIncident, updateIncidentStatus as apiUpdateStatus, WS_BASE, createIncident } from './services/api';
-
 import { wsService } from './services/wsService';
-import { App } from '@capacitor/app';
+import { App as CapApp } from '@capacitor/app';
 import { BackgroundTask } from '@capawesome/capacitor-background-task';
 
 function App() {
@@ -44,7 +43,7 @@ function App() {
 
   // Background Task & App State Management
   useEffect(() => {
-    const stateListener = App.addListener('appStateChange', async ({ isActive }) => {
+    const stateListener = CapApp.addListener('appStateChange', async ({ isActive }) => {
       console.log('App state changed. Is active?', isActive);
       if (!isActive) {
         // App is minimized
