@@ -130,6 +130,12 @@ async function create(req, res, next) {
     const logger = req.app.locals.logger;
     const env = req.app.locals.env;
 
+    logger.info('Received incident creation request', {
+      type,
+      location: typeof location === 'string' ? location : (location?.sector || 'Object'),
+      isPublic: !req.user,
+    });
+
     // Run preliminary rule-based triage for immediate routing
     const preTriage = ruleBasedTriage(type, (location?.sector || 'Unknown Sector'));
 
