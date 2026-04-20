@@ -1,3 +1,13 @@
+---
+title: OmniGuard API
+emoji: 🛡️
+colorFrom: green
+colorTo: blue
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 [![Android Build](https://github.com/HyperPenetrator/OmniGuard-backend-own/actions/workflows/android-build.yml/badge.svg)](https://github.com/HyperPenetrator/OmniGuard-backend-own/actions/workflows/android-build.yml)[![OmniGuard CI](https://github.com/HyperPenetrator/OmniGuard-backend-own/actions/workflows/ci.yml/badge.svg)](https://github.com/HyperPenetrator/OmniGuard-backend-own/actions/workflows/ci.yml)
 # OmniGuard — Tactical Crisis Command & Intelligence 🛡️
 

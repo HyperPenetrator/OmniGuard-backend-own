@@ -1,5 +1,6 @@
-// For Android Emulator development, use 10.0.2.2 to reach the host machine
-const DEV_HOST = '10.0.2.2'; // Use 10.0.2.2 for Android Emulator, localhost for web
+const DEV_HOST = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) 
+  ? 'localhost' 
+  : '10.0.2.2';
 
 export const API_BASE = import.meta.env.PROD 
   ? 'https://hrishikeshdutta-omniguard-api.hf.space/api' 
