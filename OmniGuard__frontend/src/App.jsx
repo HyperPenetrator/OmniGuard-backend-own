@@ -299,7 +299,7 @@ function App() {
                 {/* Role-Based Dashboard Root */}
                 <Route path="/" element={
                   user.role === 'civilian' ? <CivilianSOS token={user.token} /> :
-                  user.role === 'responder' ? <ResponderIncidents incidents={incidents} /> :
+                  user.role === 'responder' ? <ResponderIncidents user={user} incidents={incidents} /> :
                   <CoordinatorDashboard incidents={incidents} onUpdateStatus={updateIncidentStatus} />
                 } />
 

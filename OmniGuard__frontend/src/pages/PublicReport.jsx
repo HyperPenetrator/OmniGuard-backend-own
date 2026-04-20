@@ -63,9 +63,7 @@ export default function PublicReport() {
       setStep(4);
     } catch (err) {
       console.error('Failed to create incident', err);
-      // Even if API fails, show success to not deter civilians from calling
-      // Real-world: should queue and retry; for now still advance
-      setStep(4);
+      alert('Failed to send SOS: ' + err.message + '\n\nPlease call 112 immediately.');
     } finally {
       setIsSubmitting(false);
     }
