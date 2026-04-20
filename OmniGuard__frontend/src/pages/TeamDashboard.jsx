@@ -64,7 +64,7 @@ const teamConfigs = {
   }
 };
 
-export default function TeamDashboard({ user, incidents, onUpdateStatus }) {
+export default function TeamDashboard({ user, incidents, onUpdateStatus, userLocation }) {
   const team = user.assignedTeam || user.team || 'Medical';
   const config = teamConfigs[team] || teamConfigs.Medical;
   

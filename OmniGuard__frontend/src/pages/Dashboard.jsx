@@ -47,7 +47,7 @@ export default function Dashboard({ incidents = [], onUpdateStatus }) {
           >
             <div className="flex items-start justify-between">
               <div className={`p-2 md:p-3 rounded-lg md:rounded-xl bg-slate-50 border border-slate-100 ${stat.color} group-hover:scale-110 transition-transform`}>
-                <stat.icon size={18} className="md:size-24" />
+                <stat.icon className="w-5 md:w-6" />
               </div>
               <div className="hidden sm:flex items-center gap-1 text-[9px] md:text-[10px] font-mono font-bold text-slate-500 uppercase tracking-tighter">
                 <TrendingUp size={10} className="text-emerald-500" />

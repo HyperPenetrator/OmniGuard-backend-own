@@ -123,7 +123,7 @@ export default function TopNav({ user, toggleSidebar, onQuickSOS, incidents = []
             <p className="text-[9px] text-emerald-500 font-mono uppercase font-bold">{user?.role || 'Guest'} Access</p>
           </div>
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-slate-100 flex items-center justify-center border border-slate-200 group-hover:border-emerald-500 transition-colors overflow-hidden">
-             {user?.role === 'coordinator' ? <ShieldCheck className="text-emerald-500" size={18} className="md:size-24" /> : <User className="text-slate-400" size={18} className="md:size-24" />}
+             {user?.role === 'coordinator' ? <ShieldCheck className="text-emerald-500 w-5 md:w-6" /> : <User className="text-slate-400 w-5 md:w-6" />}
           </div>
         </div>
       </div>

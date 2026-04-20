@@ -146,7 +146,7 @@ export default function CivilianPortal({ onLogin }) {
               href={`tel:${e.number}`}
               className={`${e.color} text-white p-4 md:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg`}
             >
-              <Phone size={20} className="md:size-24" fill="currentColor" />
+              <Phone className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" />
               <span className="font-black text-xl md:text-2xl">{e.number}</span>
               <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">{e.label}</span>
             </a>
@@ -161,7 +161,7 @@ export default function CivilianPortal({ onLogin }) {
           className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 md:p-10 text-center mb-12"
         >
           <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-rose-500 rounded-3xl shadow-2xl shadow-rose-500/30 mb-6">
-            <ShieldAlert size={32} className="text-white md:size-40" />
+            <ShieldAlert className="text-white w-8 h-8 md:w-10 md:h-10" />
           </div>
           <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-4">
             Report an Emergency Now
@@ -176,7 +176,7 @@ export default function CivilianPortal({ onLogin }) {
                 onClick={() => navigate(`/report?type=${encodeURIComponent(t.label)}`)}
                 className={`p-3 md:p-4 rounded-2xl flex flex-col items-center gap-2 ${t.color.split(' ')[1]} border border-slate-100 cursor-pointer hover:scale-105 hover:shadow-md transition-all active:scale-95`}
               >
-                <t.icon size={24} className={`${t.color.split(' ')[0]} md:size-28`} />
+                <t.icon className={`${t.color.split(' ')[0]} w-6 h-6 md:w-7 md:h-7`} />
                 <span className="text-[10px] md:text-xs font-bold text-slate-700 uppercase tracking-wider">{t.label}</span>
               </button>
             ))}
@@ -185,9 +185,9 @@ export default function CivilianPortal({ onLogin }) {
             onClick={() => navigate('/report')}
             className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-rose-500 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-base md:text-lg shadow-2xl shadow-rose-500/30 hover:bg-rose-600 transition-all active:scale-95"
           >
-            <ShieldAlert size={20} className="md:size-24" />
+            <ShieldAlert className="w-5 h-5 md:w-6 md:h-6" />
             Report Emergency
-            <ChevronRight size={18} className="md:size-20" />
+            <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
           </button>
         </motion.div>
 
