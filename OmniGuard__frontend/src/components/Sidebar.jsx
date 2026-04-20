@@ -46,7 +46,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
       )}
 
       <aside className={cn(
-        "fixed lg:fixed left-0 top-0 h-full bg-white border-r border-slate-200 flex flex-col z-40 transition-all duration-300 ease-in-out shadow-xl lg:shadow-sm overflow-hidden",
+        "fixed left-0 top-0 h-full bg-white border-r border-slate-200 flex flex-col z-[100] transition-all duration-300 ease-in-out shadow-2xl overflow-hidden",
         isOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full lg:translate-x-0 lg:w-20"
       )}>
         <div className={cn(

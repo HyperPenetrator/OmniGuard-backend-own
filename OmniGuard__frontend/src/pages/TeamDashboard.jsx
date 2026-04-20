@@ -108,8 +108,11 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
   // Find nearest incident for routing
   const nearestIncident = React.useMemo(() => {
     if (!userLocation || teamIncidents.length === 0) return null;
-    return [...teamIncidents].sort((a, b) => {
-      if (!a.location?.coordinates || !b.location?.coordinates) return 0;
+    // Filter out incidents without coordinates before finding the nearest
+    const incidentsWithCoords = teamIncidents.filter(inc => inc.location?.coordinates?.lat && inc.location?.coordinates?.lng);
+    if (incidentsWithCoords.length === 0) return null;
+
+    return [...incidentsWithCoords].sort((a, b) => {
       const distA = getDistance(userLocation.lat, userLocation.lng, a.location.coordinates.lat, a.location.coordinates.lng);
       const distB = getDistance(userLocation.lat, userLocation.lng, b.location.coordinates.lat, b.location.coordinates.lng);
       return distA - distB;
@@ -117,26 +120,31 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
   }, [userLocation, teamIncidents]);
 
   const routingData = React.useMemo(() => {
-    if (!nearestIncident || !userLocation) return null;
-    const dist = getDistance(
-      userLocation.lat, 
-      userLocation.lng, 
-      nearestIncident.location.coordinates.lat, 
-      nearestIncident.location.coordinates.lng
-    );
-    const bearing = getBearing(
-      userLocation.lat, 
-      userLocation.lng, 
-      nearestIncident.location.coordinates.lat, 
-      nearestIncident.location.coordinates.lng
-    );
-    const eta = Math.round(dist * 2.5) + 1; // 2.5 min per km + 1 min overhead
-    return { 
-      dist: dist.toFixed(1), 
-      bearing, 
-      eta,
-      sector: nearestIncident.location.sector || 'Sector Delta'
-    };
+    if (!nearestIncident?.location?.coordinates || !userLocation) return null;
+    try {
+      const dist = getDistance(
+        userLocation.lat, 
+        userLocation.lng, 
+        nearestIncident.location.coordinates.lat, 
+        nearestIncident.location.coordinates.lng
+      );
+      const bearing = getBearing(
+        userLocation.lat, 
+        userLocation.lng, 
+        nearestIncident.location.coordinates.lat, 
+        nearestIncident.location.coordinates.lng
+      );
+      const eta = Math.round(dist * 2.5) + 1; // 2.5 min per km + 1 min overhead
+      return { 
+        dist: dist.toFixed(1), 
+        bearing, 
+        eta,
+        sector: nearestIncident.location.sector || 'Sector Delta'
+      };
+    } catch (e) {
+      console.warn('Routing calculation failed', e);
+      return null;
+    }
   }, [nearestIncident, userLocation]);
 
   const activeCount = teamIncidents.length;
@@ -269,7 +277,9 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Target Sector</p>
                   <p className="text-sm font-black text-slate-900 font-mono">
-                    {routingData ? `${routingData.sector} [${nearestIncident.location.coordinates.lat.toFixed(2)}, ${nearestIncident.location.coordinates.lng.toFixed(2)}]` : 'Waiting for assignment...'}
+                    {routingData && nearestIncident?.location?.coordinates 
+                      ? `${routingData.sector} [${nearestIncident.location.coordinates.lat.toFixed(2)}, ${nearestIncident.location.coordinates.lng.toFixed(2)}]` 
+                      : 'Waiting for assignment...'}
                   </p>
                </div>
                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
