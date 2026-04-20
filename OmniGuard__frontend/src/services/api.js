@@ -95,3 +95,18 @@ export async function updateIncidentStatus(id, status, token) {
   if (!res.ok) throw new Error(data.error?.message || 'Failed to update status');
   return data;
 }
+
+export async function getStats(token) {
+  const res = await fetch(`${API_BASE}/incidents/stats`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  
+  if (res.status === 401) {
+    window.dispatchEvent(new CustomEvent('unauthorized'));
+  }
+
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || 'Failed to fetch stats');
+  return data.data;
+}
+

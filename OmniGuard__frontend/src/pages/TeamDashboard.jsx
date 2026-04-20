@@ -139,29 +139,55 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
       {/* Map and Routing Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
          <div className="lg:col-span-2 h-[400px] bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl relative">
-            <TacticalMap incidents={teamIncidents} userLocation={userLocation} showRouting={true} />
-            
-            {/* Routing Instruction Overlay (Match User Image) */}
-            {userLocation && teamIncidents.length > 0 && (
-              <motion.div 
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="absolute top-6 left-6 z-[1000] bg-white/95 backdrop-blur shadow-2xl rounded-3xl p-4 flex items-center gap-5 border border-slate-200 pr-10"
-              >
-                <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
-                  <Navigation size={28} />
+          <TacticalMap incidents={teamIncidents} userLocation={userLocation} showRouting={true} />
+          
+          {/* GPS Status / Enablement Prompt */}
+          {!userLocation && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute bottom-6 left-6 right-6 z-[1000] bg-rose-600 text-white p-4 rounded-2xl flex items-center justify-between shadow-2xl border border-rose-500/50"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center animate-pulse">
+                  <MapPin size={20} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Routing Instruction</p>
-                  <h4 className="text-xl font-black text-slate-900 tracking-tighter">350m - Turn Right at Beltola Chowk</h4>
+                  <h5 className="text-xs font-black uppercase tracking-tight">Tactical GPS Disabled</h5>
+                  <p className="text-[10px] text-white/70 font-medium tracking-tight">Enable location services for real-time tactical routing.</p>
                 </div>
-                <div className="absolute top-4 right-6 flex flex-col items-center">
-                   <span className="text-2xl font-black text-slate-900 font-mono tracking-tighter leading-none">4 MIN</span>
-                   <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Est. Arrival</span>
-                </div>
-              </motion.div>
-            )}
-         </div>
+              </div>
+              <button 
+                onClick={() => window.location.reload()} 
+                className="px-4 py-2 bg-white text-rose-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-50 transition-colors"
+              >
+                Sync Uplink
+              </button>
+            </motion.div>
+          )}
+
+          {/* Routing Instruction Overlay (Match User Image) */}
+          {userLocation && teamIncidents.length > 0 && (
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="absolute top-6 left-6 z-[1000] bg-white/95 backdrop-blur shadow-2xl rounded-3xl p-4 flex items-center gap-5 border border-slate-200 pr-10"
+            >
+              <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+                <Navigation size={28} />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Routing Instruction</p>
+                <h4 className="text-xl font-black text-slate-900 tracking-tighter">350m - Turn Right at Beltola Chowk</h4>
+              </div>
+              <div className="absolute top-4 right-6 flex flex-col items-center">
+                 <span className="text-2xl font-black text-slate-900 font-mono tracking-tighter leading-none">4 MIN</span>
+                 <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Est. Arrival</span>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
 
          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-6">

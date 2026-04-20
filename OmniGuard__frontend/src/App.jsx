@@ -12,7 +12,7 @@ import CivilianSOS from './pages/CivilianSOS'
 import CivilianStatus from './pages/CivilianStatus'
 import ResponderIncidents from './pages/ResponderIncidents'
 import ResponderNavigation from './pages/ResponderNavigation'
-import CoordinatorDashboard from './pages/CoordinatorDashboard'
+import AdminDashboard from './pages/AdminDashboard'
 import ActiveThreats from './pages/ActiveThreats'
 import CommanderCenter from './pages/CommanderCenter'
 import MapView from './pages/MapView'
@@ -372,7 +372,7 @@ function App() {
                     )}
                     {user.role === 'civilian' ? <CivilianSOS token={user.token} /> :
                     user.role === 'responder' ? <TeamDashboard user={user} incidents={incidents} onUpdateStatus={updateIncidentStatus} userLocation={userLocation} /> :
-                    <CoordinatorDashboard incidents={incidents} onUpdateStatus={updateIncidentStatus} />}
+                    <AdminDashboard user={user} incidents={incidents} onUpdateStatus={updateIncidentStatus} />}
                   </div>
                 } />
 
@@ -396,7 +396,7 @@ function App() {
 
                 <Route path="/dashboard" element={
                   <ProtectedRoute user={user} allowedRoles={['coordinator']}>
-                    <CoordinatorDashboard incidents={incidents} onUpdateStatus={updateIncidentStatus} />
+                    <AdminDashboard user={user} incidents={incidents} onUpdateStatus={updateIncidentStatus} />
                   </ProtectedRoute>
                 } />
                 

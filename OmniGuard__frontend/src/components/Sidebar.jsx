@@ -22,7 +22,7 @@ const menuItems = {
     { id: 'profile', icon: User, label: 'Responder ID', path: '/profile' },
   ],
   coordinator: [
-    { id: 'dashboard', icon: LayoutDashboard, label: 'Control Center', path: '/dashboard' },
+    { id: 'dashboard', icon: LayoutDashboard, label: 'Admin Panel', path: '/dashboard' },
     { id: 'command', icon: Terminal, label: 'Command Terminal', path: '/coordinator' },
     { id: 'maps', icon: MapPin, label: 'Tactical Map', path: '/maps' },
     { id: 'alerts', icon: ShieldAlert, label: 'Threat Center', path: '/alerts' },
@@ -33,6 +33,7 @@ const menuItems = {
 export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
   const role = user?.role || 'civilian';
   const items = menuItems[role] || menuItems.civilian;
+  const roleLabel = role === 'coordinator' ? 'ADMIN' : role;
 
   return (
     <>
@@ -61,8 +62,9 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
             !isOpen && "lg:opacity-0 lg:h-0 overflow-hidden"
           )}>
             <h1 className="font-bold text-base tracking-[0.2em] text-slate-900 uppercase">OMNIGUARD</h1>
-            <p className="text-[8px] text-emerald-500 font-mono tracking-[0.4em] uppercase mt-1">Operational {role}</p>
+            <p className="text-[8px] text-emerald-500 font-mono tracking-[0.4em] uppercase mt-1">Operational {roleLabel}</p>
           </div>
+
         </div>
 
         <nav className="flex-1 p-4 flex flex-col gap-2 overflow-y-auto overflow-x-hidden">

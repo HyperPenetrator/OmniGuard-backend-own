@@ -33,15 +33,25 @@ const IncomingIncidentSchema = z.object({
 const FALLBACK_RULES = {
   medical: { severity: 'Critical', assignedTeam: 'Medical', estimatedResponseTime: 3 },
   cardiac: { severity: 'Critical', assignedTeam: 'Medical', estimatedResponseTime: 2 },
+  injury: { severity: 'High', assignedTeam: 'Medical', estimatedResponseTime: 5 },
+  accident: { severity: 'High', assignedTeam: 'Medical', estimatedResponseTime: 5 },
   fire: { severity: 'Critical', assignedTeam: 'Fire', estimatedResponseTime: 5 },
   explosion: { severity: 'Critical', assignedTeam: 'Fire', estimatedResponseTime: 3 },
+  smoke: { severity: 'High', assignedTeam: 'Fire', estimatedResponseTime: 7 },
+  hazard: { severity: 'High', assignedTeam: 'Fire', estimatedResponseTime: 8 },
   security: { severity: 'High', assignedTeam: 'Police', estimatedResponseTime: 5 },
   intrusion: { severity: 'High', assignedTeam: 'Police', estimatedResponseTime: 5 },
   breach: { severity: 'High', assignedTeam: 'Police', estimatedResponseTime: 5 },
+  robbery: { severity: 'Critical', assignedTeam: 'Police', estimatedResponseTime: 3 },
+  crime: { severity: 'High', assignedTeam: 'Police', estimatedResponseTime: 5 },
+  theft: { severity: 'Medium', assignedTeam: 'Police', estimatedResponseTime: 10 },
   communication: { severity: 'Medium', assignedTeam: 'Tech-Hazard', estimatedResponseTime: 15 },
   outage: { severity: 'Medium', assignedTeam: 'Tech-Hazard', estimatedResponseTime: 15 },
+  leak: { severity: 'High', assignedTeam: 'Tech-Hazard', estimatedResponseTime: 12 },
   flooding: { severity: 'High', assignedTeam: 'Fire', estimatedResponseTime: 10 },
-  earthquake: { severity: 'Critical', assignedTeam: 'Medical', estimatedResponseTime: 5 },
+  earthquake: { severity: 'Critical', assignedTeam: 'Tech-Hazard', estimatedResponseTime: 5 },
+  disaster: { severity: 'Critical', assignedTeam: 'Tech-Hazard', estimatedResponseTime: 5 },
+
 };
 
 const DEFAULT_FALLBACK = {
