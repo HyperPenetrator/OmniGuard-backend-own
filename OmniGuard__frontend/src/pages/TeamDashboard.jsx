@@ -49,7 +49,7 @@ const teamConfigs = {
     hoverBorder: 'hover:border-amber-400',
     glow: 'shadow-amber-500/20',
     accent: 'bg-amber-50',
-    incidentFilter: 'Natural Disaster'
+    incidentFilter: ['Natural', 'Natural Disaster']
   },
   Medical: {
     label: 'Medical Response',
@@ -100,7 +100,10 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
   // Filter incidents for this team and only active ones
   const teamIncidents = incidents.filter(inc => 
     inc && 
-    (inc.assignedTeam === team || inc.type === config.incidentFilter) &&
+    (inc.assignedTeam === team || 
+     (Array.isArray(config.incidentFilter) 
+       ? config.incidentFilter.includes(inc.type) 
+       : inc.type === config.incidentFilter)) &&
     inc.status !== 'Resolved' && inc.status !== 'resolved' &&
     inc.status !== 'Closed' && inc.status !== 'closed'
   );

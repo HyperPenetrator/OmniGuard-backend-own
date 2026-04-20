@@ -50,6 +50,7 @@ const FALLBACK_RULES = {
   leak: { severity: 'High', assignedTeam: 'Tech-Hazard', estimatedResponseTime: 12 },
   flooding: { severity: 'High', assignedTeam: 'Fire', estimatedResponseTime: 10 },
   earthquake: { severity: 'Critical', assignedTeam: 'Tech-Hazard', estimatedResponseTime: 5 },
+  natural: { severity: 'High', assignedTeam: 'Tech-Hazard', estimatedResponseTime: 10 },
   disaster: { severity: 'Critical', assignedTeam: 'Tech-Hazard', estimatedResponseTime: 5 },
 
 };
