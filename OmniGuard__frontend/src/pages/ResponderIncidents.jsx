@@ -8,9 +8,14 @@ import { useNavigate } from 'react-router-dom';
 export default function ResponderIncidents({ user, incidents = [] }) {
   const navigate = useNavigate();
 
-  // Filter incidents for this responder's team with safety checks
+  // Filter incidents for this responder's team with safety checks and exclude resolved/closed
   const displayIncidents = incidents
-    .filter(inc => inc && inc.assignedTeam === (user.assignedTeam || user.responderTeam))
+    .filter(inc => 
+      inc && 
+      inc.assignedTeam === (user.assignedTeam || user.responderTeam) &&
+      inc.status !== 'Resolved' && inc.status !== 'resolved' &&
+      inc.status !== 'Closed' && inc.status !== 'closed'
+    )
     .map(inc => ({
       id: inc.incidentNumber || inc.id || 'INC-UNKNOWN',
       type: inc.type || 'Unknown Incident',

@@ -68,9 +68,12 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus }) {
   const team = user.assignedTeam || user.team || 'Medical';
   const config = teamConfigs[team] || teamConfigs.Medical;
   
-  // Filter incidents for this team
+  // Filter incidents for this team and only active ones
   const teamIncidents = incidents.filter(inc => 
-    inc && (inc.assignedTeam === team || inc.type === config.incidentFilter)
+    inc && 
+    (inc.assignedTeam === team || inc.type === config.incidentFilter) &&
+    inc.status !== 'Resolved' && inc.status !== 'resolved' &&
+    inc.status !== 'Closed' && inc.status !== 'closed'
   );
 
   const activeCount = teamIncidents.length;

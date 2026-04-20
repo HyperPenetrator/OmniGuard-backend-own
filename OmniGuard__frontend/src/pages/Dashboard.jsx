@@ -3,9 +3,15 @@ import { motion } from 'framer-motion'
 import { Activity, ShieldAlert, Users, Zap, TrendingUp, Truck, CheckCircle2 } from 'lucide-react'
 import TacticalMap from '../components/TacticalMap'
 
-export default function Dashboard({ incidents, onUpdateStatus }) {
-  const activeCount = incidents.length;
-  const highPriority = incidents.filter(i => i.severity === 'High' || i.severity === 'Critical').length;
+export default function Dashboard({ incidents = [], onUpdateStatus }) {
+  // Filter for only active incidents (exclude Resolved and Closed)
+  const activeIncidents = incidents.filter(i => 
+    i && i.status !== 'Resolved' && i.status !== 'resolved' && 
+    i.status !== 'Closed' && i.status !== 'closed'
+  );
+
+  const activeCount = activeIncidents.length;
+  const highPriority = activeIncidents.filter(i => i.severity === 'High' || i.severity === 'Critical').length;
   
   const stats = [
     { label: 'Live Incidents', value: activeCount.toString(), icon: ShieldAlert, color: 'text-red-500', trend: 'Live' },
@@ -63,7 +69,7 @@ export default function Dashboard({ incidents, onUpdateStatus }) {
             <h3 className="text-[10px] md:text-xs font-bold text-slate-900 uppercase tracking-[0.1em] md:tracking-[0.2em]">Priority Incident Feed</h3>
             <div className="flex items-center gap-2">
                <span className="px-2 md:px-3 py-0.5 md:py-1 bg-white border border-slate-200 rounded-lg text-[8px] md:text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                 {incidents.length} Active
+                 {activeCount} Active
                </span>
             </div>
           </div>
@@ -77,7 +83,7 @@ export default function Dashboard({ incidents, onUpdateStatus }) {
                    <p className="text-slate-500 text-[10px] md:text-xs mt-2 font-mono">No pending emergencies detected in current sector.</p>
                 </div>
              ) : (
-                incidents.map((inc, i) => (
+                activeIncidents.map((inc, i) => (
                   <motion.div 
                     key={inc.id}
                     initial={{ opacity: 0, x: -20 }}
