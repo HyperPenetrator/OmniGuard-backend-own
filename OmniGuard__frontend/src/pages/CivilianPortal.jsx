@@ -171,10 +171,14 @@ export default function CivilianPortal({ onLogin }) {
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
             {reportTypes.map((t) => (
-              <div key={t.label} className={`p-4 rounded-2xl flex flex-col items-center gap-2 ${t.color.split(' ')[1]} border border-slate-100`}>
+              <button
+                key={t.label}
+                onClick={() => navigate(`/report?type=${encodeURIComponent(t.label)}`)}
+                className={`p-4 rounded-2xl flex flex-col items-center gap-2 ${t.color.split(' ')[1]} border border-slate-100 cursor-pointer hover:scale-105 hover:shadow-md transition-all active:scale-95`}
+              >
                 <t.icon size={28} className={t.color.split(' ')[0]} />
                 <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">{t.label}</span>
-              </div>
+              </button>
             ))}
           </div>
           <button

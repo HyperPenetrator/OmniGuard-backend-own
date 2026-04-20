@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Flame, Activity, ShieldAlert, Tent, MapPin, Camera, ChevronRight, ChevronLeft, CheckCircle2, Navigation, Loader2 } from 'lucide-react'
+import { useSearchParams } from 'react-router-dom'
 import { createIncident } from '../services/api'
 
 const incidentTypes = [
@@ -11,10 +12,15 @@ const incidentTypes = [
 ]
 
 export default function ReportEmergency({ token, onSuccess }) {
-  const [step, setStep] = useState(1)
+  const [searchParams] = useSearchParams()
+  // Normalise the type query param to lowercase so it matches incidentTypes ids
+  const preselectedType = (searchParams.get('type') || '').toLowerCase().replace(/\s/g, '_').replace('/', '_')
+  const validPreselect = incidentTypes.find(t => t.id === preselectedType || t.label.toLowerCase() === preselectedType)
+
+  const [step, setStep] = useState(validPreselect ? 2 : 1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
-    type: '',
+    type: validPreselect ? validPreselect.id : '',
     location: '',
     description: '',
     photo: null
