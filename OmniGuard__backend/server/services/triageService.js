@@ -204,7 +204,11 @@ INCOMING INCIDENT REPORT:
 CLASSIFICATION PROTOCOL:
 1. Assess the threat level based on incident type and context.
 2. Assign severity based on potential for loss of life, property damage, and operational impact.
-3. Recommend the most appropriate response team.
+3. Recommend the most appropriate response team:
+   - Fire: Fire, explosions, hazardous smoke.
+   - Medical: Injuries, cardiac events, accidents.
+   - Police: Security breaches, crimes, thefts, civil unrest.
+   - Tech-Hazard: Natural disasters (earthquakes, floods), utility outages, cyber/tech leaks.
 4. Estimate realistic response time in minutes.
 5. Identify specific risk factors.
 
