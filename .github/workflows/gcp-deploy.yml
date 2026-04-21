@@ -51,7 +51,6 @@ jobs:
           # Ensure these secrets are set in your GitHub repository secrets.
           env_vars: |
             NODE_ENV=production
-            PORT=8080
             JWT_SECRET=${{ secrets.JWT_SECRET }}
             JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}
             FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}
