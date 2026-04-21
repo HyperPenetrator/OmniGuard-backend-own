@@ -21,6 +21,7 @@ OmniGuard is a high-fidelity, real-time crisis management platform designed for 
 | **Admin Command Center** | 🟢 Production | [omniguard-web.vercel.app/dashboard](https://omniguard-web.vercel.app/dashboard) |
 | **Public Safety Portal** | 🟢 Active | [omniguard-suite.vercel.app](https://omniguard-suite.vercel.app) |
 | **System API (WS/REST)** | 🟢 Operational | [OmniGuard-API (Hugging Face)](https://huggingface.co/spaces/hrishikeshdutta/OmniGuard-API) |
+| **GCP API (Primary)** | 🔵 Staging | `https://omniguard-api-robust-backend-01.a.run.app` (Pending) |
 
 ## 🏗️ Core Architecture
 
@@ -71,6 +72,32 @@ OmniGuard/
 Refer to the sub-directory documentation for environment-specific configurations:
 - [**Frontend Configuration Guide**](./OmniGuard__frontend/README.md)
 - [**Backend Configuration Guide**](./OmniGuard__backend/server/README.md)
+
+## ☁️ Google Cloud Deployment (Cloud Run)
+
+The backend is now configured for automated deployment to Google Cloud Run via GitHub Actions.
+
+### 1. Initial Setup (One-time)
+Run these commands in your local terminal to prepare your GCP project:
+```bash
+# Enable required APIs
+gcloud services enable run.googleapis.com artifactregistry.googleapis.com cloudbuild.googleapis.com --project robust-backend-01
+
+# Create a Service Account for GitHub Actions
+gcloud iam service-accounts create github-deployer --display-name="GitHub Deployer"
+
+# Assign roles (replace [PROJECT_NUMBER] with your project number)
+gcloud projects add-iam-policy-binding robust-backend-01 --member="serviceAccount:github-deployer@robust-backend-01.iam.gserviceaccount.com" --role="roles/run.admin"
+gcloud projects add-iam-policy-binding robust-backend-01 --member="serviceAccount:github-deployer@robust-backend-01.iam.gserviceaccount.com" --role="roles/storage.admin"
+gcloud projects add-iam-policy-binding robust-backend-01 --member="serviceAccount:github-deployer@robust-backend-01.iam.gserviceaccount.com" --role="roles/iam.serviceAccountUser"
+gcloud projects add-iam-policy-binding robust-backend-01 --member="serviceAccount:github-deployer@robust-backend-01.iam.gserviceaccount.com" --role="roles/artifactregistry.admin"
+
+# Generate the JSON key
+gcloud iam service-accounts keys create gcp-key.json --iam-account=github-deployer@robust-backend-01.iam.gserviceaccount.com
+```
+
+### 2. GitHub Secrets
+Add the content of `gcp-key.json` as a GitHub Secret named **`GCP_SA_KEY`**. Also ensure all backend environment variables (JWT, Firebase, Gemini) are mirrored in GitHub Secrets.
 
 ---
 © 2026 OmniGuard Systems • Authorized Personnel Only • [Security Policy](./SECURITY.md)
