@@ -21,7 +21,7 @@ OmniGuard is a high-fidelity, real-time crisis management platform designed for 
 | **Admin Command Center** | 🟢 Production | [omniguard-web.vercel.app/dashboard](https://omniguard-web.vercel.app/dashboard) |
 | **Public Safety Portal** | 🟢 Active | [omniguard-suite.vercel.app](https://omniguard-suite.vercel.app) |
 | **System API (WS/REST)** | 🟢 Operational | [OmniGuard-API (Hugging Face)](https://huggingface.co/spaces/hrishikeshdutta/OmniGuard-API) |
-| **GCP API (Primary)** | 🔵 Staging | `https://omniguard-api-robust-backend-01.a.run.app` (Pending) |
+| **GCP API (Primary)** | 🟢 Production  | [GCP-API](https://omniguard-api-robust-backend-01.a.run.app) |
 
 ## 🏗️ Core Architecture
 
