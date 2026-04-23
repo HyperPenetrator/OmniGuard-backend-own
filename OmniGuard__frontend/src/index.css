@@ -1,45 +1,14 @@
 @import "tailwindcss";
-
-:root {
-  /* Dark Mode (Tactical Terminal) */
-  --bg-start: #0B0F19;
-  --bg-end: #020617;
-  --card-bg: rgba(30, 41, 59, 0.4);
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-shadow: 0 8px 32px 0 rgba(0,0,0,0.37), 0 0 15px rgba(255, 255, 255, 0.05);
-  --text-primary: #FFFFFF;
-  --text-muted: #94A3B8;
-  --brand-primary: #3b82f6;
-  --brand-accent: #10b981;
-  --glow-opacity: 0.2;
-}
-
-.light {
-  /* Light Mode (Command Center) */
-  --bg-start: #FFFFFF;
-  --bg-end: #F8FAFC;
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(0, 0, 0, 0.15);
-  --glass-shadow: 0 8px 32px 0 rgba(148, 163, 184, 0.12), 0 0 15px rgba(0, 0, 0, 0.03);
-  --text-primary: #020617;
-  --text-muted: #475569;
-  --brand-primary: #2563eb;
-  --brand-accent: #059669;
-  --glow-opacity: 0.03;
-}
-
-
+@import "./styles/themeTokens.css";
 
 @theme {
-  --color-brand-bg-start: var(--bg-start);
-  --color-brand-bg-end: var(--bg-end);
-  --color-brand-card: var(--card-bg);
-  --color-brand-primary: var(--brand-primary);
-  --color-brand-accent: var(--brand-accent);
-  --color-brand-danger: #ef4444;
-  --color-brand-warning: #f59e0b;
+  --color-brand-bg-start: var(--surface-bg-alt);
+  --color-brand-bg-end: var(--surface-bg);
+  --color-brand-card: var(--surface-bg-alt);
+  --color-brand-primary: var(--accent-color);
+  --color-brand-accent: var(--accent-secondary);
+  --color-brand-danger: var(--status-critical);
+  --color-brand-warning: var(--status-warning);
   --color-brand-cyan: #06b6d4;
   --color-brand-text: var(--text-primary);
   --color-brand-muted: var(--text-muted);
@@ -54,12 +23,13 @@
   }
   body {
     @apply font-sans antialiased selection:bg-brand-primary/30 selection:text-white transition-colors duration-300;
-    background: radial-gradient(circle at 50% 50%, var(--bg-start) 0%, var(--bg-end) 100%);
+    background: radial-gradient(circle at 50% 50%, var(--surface-bg-alt) 0%, var(--surface-bg) 100%);
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
   }
 }
+
 
 
 @layer components {

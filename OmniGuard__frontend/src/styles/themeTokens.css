@@ -1,0 +1,29 @@
+:root {
+  /* Industrial Light (Original Neumorphic/Command Center) */
+  --surface-bg: #F8FAFC;
+  --surface-bg-alt: #FFFFFF;
+  --text-primary: #020617;
+  --text-muted: #475569;
+  --accent-color: #2563eb;
+  --accent-secondary: #059669;
+  --glass-morphism-opacity: 0.85;
+  --glass-border: rgba(0, 0, 0, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(148, 163, 184, 0.12);
+  --status-critical: #ef4444;
+  --status-warning: #f59e0b;
+}
+
+.dark {
+  /* Industrial Dark (Tactical Terminal) */
+  --surface-bg: #0B0E14;
+  --surface-bg-alt: #020617;
+  --text-primary: #FFFFFF;
+  --text-muted: #94A3B8;
+  --accent-color: #3b82f6;
+  --accent-secondary: #10b981;
+  --glass-morphism-opacity: 0.05;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --status-critical: #f43f5e;
+  --status-warning: #fbbf24;
+}
