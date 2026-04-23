@@ -62,7 +62,7 @@ export default function CivilianPortal({ onLogin }) {
         </div>
         <button
           onClick={() => setShowStaffLogin(!showStaffLogin)}
-          className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider"
+          className="flex items-center gap-2 text-xs font-bold text-[#A0AEC0] hover:text-white transition-colors uppercase tracking-wider"
         >
           <Lock size={14} />
           Staff Login
@@ -128,7 +128,7 @@ export default function CivilianPortal({ onLogin }) {
             Report an Emergency.<br />
             <span className="text-emerald-500">Get Help Fast.</span>
           </h1>
-          <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed relative z-10">
+          <p className="text-xl text-[#A0AEC0] font-medium max-w-2xl mx-auto leading-relaxed relative z-10">
             OmniGuard connects you directly to the nearest tactical response unit. Your report is automatically triaged and dispatched in seconds.
           </p>
         </motion.div>
@@ -166,7 +166,7 @@ export default function CivilianPortal({ onLogin }) {
           <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-4">
             Report an Emergency Now
           </h2>
-          <p className="text-slate-400 text-sm md:text-base font-medium max-w-lg mx-auto mb-8 leading-relaxed">
+          <p className="text-[#A0AEC0] text-sm md:text-base font-medium max-w-lg mx-auto mb-8 leading-relaxed">
             Use our guided 3-step form to report fire, medical emergencies, crimes, or natural disasters. No login required.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-10">
