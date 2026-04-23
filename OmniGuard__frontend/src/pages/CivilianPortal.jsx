@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, ShieldAlert, Phone, Flame, Activity, AlertTriangle, ChevronRight, Lock, Radio } from 'lucide-react';
+import { Shield, ShieldAlert, Phone, Flame, Activity, AlertTriangle, ChevronRight, Lock, Radio, Sun, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/api';
 
@@ -18,7 +18,7 @@ const reportTypes = [
   { icon: AlertTriangle, label: 'Natural Disaster', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20 hover:border-amber-500 hover:shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
 ];
 
-export default function CivilianPortal({ onLogin }) {
+export default function CivilianPortal({ onLogin, theme, toggleTheme }) {
   const navigate = useNavigate();
   const [showStaffLogin, setShowStaffLogin] = useState(false);
   const [email, setEmail] = useState('');
@@ -48,26 +48,34 @@ export default function CivilianPortal({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen civilian-bg font-sans overflow-y-auto">
-      <div className="civilian-bg-effect" />
+    <div className="min-h-screen civilian-bg font-sans">
       {/* Header */}
-      <header className="bg-[#0B0F19]/80 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+      <header className="bg-brand-bg-start/80 backdrop-blur-md border-b border-brand-border px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm transition-colors duration-300">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+          <div className="w-10 h-10 bg-brand-accent rounded-xl flex items-center justify-center shadow-lg shadow-brand-accent/30">
             <Shield size={22} className="text-white" />
           </div>
           <div>
-            <span className="font-black text-white text-lg tracking-tight">OMNIGUARD</span>
-            <p className="text-[9px] font-mono text-emerald-600 uppercase tracking-widest leading-none">Public Safety Network</p>
+            <span className="font-black text-brand-text text-lg tracking-tight">OMNIGUARD</span>
+            <p className="text-[9px] font-mono text-brand-accent uppercase tracking-widest leading-none">Public Safety Network</p>
           </div>
         </div>
-        <button
-          onClick={() => setShowStaffLogin(!showStaffLogin)}
-          className="flex items-center gap-2 text-xs font-bold text-[#A0AEC0] hover:text-white transition-colors uppercase tracking-wider"
-        >
-          <Lock size={14} />
-          Staff Login
-        </button>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={toggleTheme}
+            className="p-2 rounded-lg bg-white/5 border border-brand-border text-brand-text hover:bg-brand-primary/10 transition-all"
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {theme === 'dark' ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} className="text-indigo-400" />}
+          </button>
+          <button
+            onClick={() => setShowStaffLogin(!showStaffLogin)}
+            className="flex items-center gap-2 text-xs font-bold text-brand-text-muted hover:text-brand-text transition-colors uppercase tracking-wider"
+          >
+            <Lock size={14} />
+            Staff Login
+          </button>
+        </div>
       </header>
 
       {/* Staff Login Dropdown */}
@@ -75,41 +83,41 @@ export default function CivilianPortal({ onLogin }) {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-slate-900 text-white p-6 border-b border-slate-700"
+          className="bg-brand-bg-start text-brand-text p-6 border-b border-brand-border"
         >
           <form onSubmit={handleStaffLogin} className="max-w-md mx-auto flex flex-col sm:flex-row gap-3 items-end">
             <div className="flex-1 space-y-1">
-              <label className="text-xs text-slate-400 font-bold uppercase tracking-widest">Staff Email</label>
+              <label className="text-xs text-brand-text-muted font-bold uppercase tracking-widest">Staff Email</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="name@omniguard.io"
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600"
+                className="w-full bg-brand-bg-end border border-brand-border rounded-xl px-4 py-3 text-sm text-brand-text outline-none focus:border-brand-accent transition-colors placeholder:text-brand-text-muted"
               />
             </div>
             <div className="flex-1 space-y-1">
-              <label className="text-xs text-slate-400 font-bold uppercase tracking-widest">Access Code</label>
+              <label className="text-xs text-brand-text-muted font-bold uppercase tracking-widest">Access Code</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-emerald-500 transition-colors placeholder:text-slate-600"
+                className="w-full bg-brand-bg-end border border-brand-border rounded-xl px-4 py-3 text-sm text-brand-text outline-none focus:border-brand-accent transition-colors placeholder:text-brand-text-muted"
               />
             </div>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-6 py-3 bg-emerald-500 text-slate-900 font-black text-sm rounded-xl hover:bg-emerald-400 transition-all disabled:opacity-50 active:scale-95 whitespace-nowrap"
+              className="px-6 py-3 bg-brand-accent text-slate-900 font-black text-sm rounded-xl hover:bg-emerald-400 transition-all disabled:opacity-50 active:scale-95 whitespace-nowrap"
             >
               {isLoading ? 'Verifying...' : 'Authenticate →'}
             </button>
           </form>
           {loginError && (
-            <p className="text-rose-400 text-xs text-center mt-3 font-bold">{loginError}</p>
+            <p className="text-brand-danger text-xs text-center mt-3 font-bold">{loginError}</p>
           )}
         </motion.div>
       )}
@@ -121,15 +129,15 @@ export default function CivilianPortal({ onLogin }) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 bg-[#121826] border border-[#10b981] text-[#10b981] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 shadow-[0_0_10px_rgba(16,185,129,0.3)] relative z-10">
-            <div className="w-2 h-2 bg-[#10b981] rounded-full radar-pulse" />
+          <div className="inline-flex items-center gap-2 bg-brand-bg-end border border-brand-accent text-brand-accent px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 shadow-[0_0_10px_rgba(16,185,129,0.3)] relative z-10">
+            <div className="w-2 h-2 bg-brand-accent rounded-full radar-pulse" />
             Emergency Response Network — Active
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight mb-6 leading-none relative z-10">
+          <h1 className="text-5xl md:text-6xl font-black text-brand-text tracking-tight mb-6 leading-none relative z-10">
             Report an Emergency.<br />
-            <span className="text-emerald-500">Get Help Fast.</span>
+            <span className="text-brand-accent">Get Help Fast.</span>
           </h1>
-          <p className="text-xl text-[#A0AEC0] font-medium max-w-2xl mx-auto leading-relaxed relative z-10">
+          <p className="text-xl text-brand-text-muted font-medium max-w-2xl mx-auto leading-relaxed relative z-10">
             OmniGuard connects you directly to the nearest tactical response unit. Your report is automatically triaged and dispatched in seconds.
           </p>
         </motion.div>
@@ -159,15 +167,15 @@ export default function CivilianPortal({ onLogin }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-[#121826]/80 backdrop-blur-xl rounded-3xl border border-slate-700 shadow-2xl p-6 md:p-10 text-center mb-12 relative z-10"
+          className="bg-brand-bg-end/80 backdrop-blur-xl rounded-3xl border border-brand-border shadow-2xl p-6 md:p-10 text-center mb-12 relative z-10"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-rose-500 rounded-3xl shadow-2xl shadow-rose-500/30 mb-6">
+          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-brand-danger rounded-3xl shadow-2xl shadow-brand-danger/30 mb-6">
             <ShieldAlert className="text-white w-8 h-8 md:w-10 md:h-10" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-4">
+          <h2 className="text-2xl md:text-3xl font-black text-brand-text tracking-tight mb-4">
             Report an Emergency Now
           </h2>
-          <p className="text-[#A0AEC0] text-sm md:text-base font-medium max-w-lg mx-auto mb-8 leading-relaxed">
+          <p className="text-brand-text-muted text-sm md:text-base font-medium max-w-lg mx-auto mb-8 leading-relaxed">
             Use our guided 3-step form to report fire, medical emergencies, crimes, or natural disasters. No login required.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-10">
@@ -178,13 +186,13 @@ export default function CivilianPortal({ onLogin }) {
                 className={`p-3 md:p-4 rounded-2xl flex flex-col items-center gap-2 ${t.color} border cursor-pointer hover:scale-105 transition-all duration-300 ease-out active:scale-95`}
               >
                 <t.icon className="w-6 h-6 md:w-7 md:h-7" />
-                <span className="text-[10px] md:text-xs font-bold text-slate-300 uppercase tracking-wider">{t.label}</span>
+                <span className="text-[10px] md:text-xs font-bold text-brand-text uppercase tracking-wider">{t.label}</span>
               </button>
             ))}
           </div>
           <button
             onClick={() => navigate('/report')}
-            className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-rose-500 text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-base md:text-lg shadow-2xl shadow-rose-500/30 hover:bg-rose-600 transition-all active:scale-95"
+            className="w-full md:w-auto inline-flex items-center justify-center gap-3 bg-brand-danger text-white px-8 md:px-10 py-4 md:py-5 rounded-2xl font-black text-base md:text-lg shadow-2xl shadow-brand-danger/30 hover:bg-rose-600 transition-all active:scale-95"
           >
             <ShieldAlert className="w-5 h-5 md:w-6 md:h-6" />
             Report Emergency
@@ -193,17 +201,17 @@ export default function CivilianPortal({ onLogin }) {
         </motion.div>
 
         {/* Info Footer */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 text-slate-400 text-xs font-bold uppercase tracking-widest">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 text-brand-text-muted text-xs font-bold uppercase tracking-widest">
           <div className="flex items-center gap-2">
-            <Radio size={14} className="text-emerald-500" />
+            <Radio size={14} className="text-brand-accent" />
             <span>AI-Powered Triage</span>
           </div>
           <div className="flex items-center gap-2">
-            <Shield size={14} className="text-emerald-500" />
+            <Shield size={14} className="text-brand-accent" />
             <span>Encrypted & Secure</span>
           </div>
           <div className="flex items-center gap-2">
-            <Activity size={14} className="text-emerald-500" />
+            <Activity size={14} className="text-brand-accent" />
             <span>24/7 Active Coverage</span>
           </div>
         </div>

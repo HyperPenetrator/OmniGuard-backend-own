@@ -36,10 +36,18 @@ function App() {
     const saved = localStorage.getItem('omni_user');
     return saved ? JSON.parse(saved) : null;
   })
+  const [theme, setTheme] = useState(() => localStorage.getItem('omni_theme') || 'dark');
   const [incidents, setIncidents] = useState([])
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024)
   const [userLocation, setUserLocation] = useState(null);
   const [gpsPermission, setGpsPermission] = useState('prompt'); // prompt, granted, denied
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('omni_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
   const handleLogin = (userData) => {
     setUser(userData);
@@ -277,7 +285,7 @@ function App() {
       <ErrorBoundary>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<CivilianPortal onLogin={handleLogin} />} />
+            <Route path="/" element={<CivilianPortal onLogin={handleLogin} theme={theme} toggleTheme={toggleTheme} />} />
             <Route path="/report" element={<PublicReport />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="*" element={<Navigate to="/" replace />} />
@@ -307,6 +315,8 @@ function App() {
             user={user} 
             isSidebarOpen={isSidebarOpen} 
             incidents={incidents}
+            theme={theme}
+            toggleTheme={toggleTheme}
             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
             onQuickSOS={handleQuickSOS}
           />
@@ -317,12 +327,12 @@ function App() {
                 {/* Universal Profile Route */}
                 <Route path="/profile" element={
                   <ProtectedRoute user={user}>
-                    <div className="flex flex-col items-center justify-center h-full text-slate-400">
-                      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                    <div className="flex flex-col items-center justify-center h-full text-brand-text-muted">
+                      <div className="w-16 h-16 bg-brand-bg-end rounded-full flex items-center justify-center mb-4 border border-brand-border">
                         <span className="text-2xl">👤</span>
                       </div>
-                      <h3 className="text-xl font-bold text-slate-900">{user.name}</h3>
-                      <p className="italic text-emerald-600 font-mono uppercase text-xs mt-1">{user.role} ACCESS</p>
+                      <h3 className="text-xl font-bold text-brand-text">{user.name}</h3>
+                      <p className="italic text-brand-accent font-mono uppercase text-xs mt-1">{user.role} ACCESS</p>
                     </div>
                   </ProtectedRoute>
                 } />
@@ -335,20 +345,20 @@ function App() {
                         <motion.div 
                           initial={{ opacity: 0, y: -20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="bg-slate-900 border border-emerald-500/50 p-6 rounded-2xl shadow-2xl shadow-emerald-500/20 backdrop-blur-xl"
+                          className="bg-brand-bg-start border border-brand-accent/50 p-6 rounded-2xl shadow-2xl shadow-brand-accent/20 backdrop-blur-xl"
                         >
                           <div className="flex items-center gap-4 mb-4">
                             <div className="p-3 bg-emerald-500/20 rounded-xl text-emerald-400">
                               <Navigation size={24} />
                             </div>
-                            <div>
-                              <h3 className="font-black text-white text-sm uppercase tracking-widest">Enable Tactical GPS</h3>
-                              <p className="text-[10px] text-slate-400 font-medium mt-0.5">Required for optimized routing to incident zones.</p>
-                            </div>
+                              <div>
+                                <h3 className="font-black text-brand-text text-sm uppercase tracking-widest">Enable Tactical GPS</h3>
+                                <p className="text-[10px] text-brand-text-muted font-medium mt-0.5">Required for optimized routing to incident zones.</p>
+                              </div>
                           </div>
                           <button 
                             onClick={requestGPS}
-                            className="w-full py-3 bg-emerald-500 text-slate-900 font-black text-xs rounded-xl uppercase tracking-widest hover:bg-emerald-400 transition-all active:scale-95 shadow-lg shadow-emerald-500/20"
+                            className="w-full py-3 bg-brand-accent text-slate-900 font-black text-xs rounded-xl uppercase tracking-widest hover:bg-emerald-400 transition-all active:scale-95 shadow-lg shadow-brand-accent/20"
                           >
                             Activate Uplink
                           </button>

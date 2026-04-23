@@ -1,31 +1,56 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+:root {
+  --brand-bg-start: #1e1b4b;
+  --brand-bg-end: #020617;
+  --brand-card: rgba(13, 18, 31, 0.4);
+  --brand-primary: #3b82f6;
+  --brand-accent: #10b981;
+  --brand-danger: #ef4444;
+  --brand-warning: #f59e0b;
+  --brand-cyan: #06b6d4;
+  --brand-text: #F8FAFC;
+  --brand-text-muted: #94A3B8;
+  --brand-border: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="light"] {
+  --brand-bg-start: #F8FAFC;
+  --brand-bg-end: #F1F5F9;
+  --brand-card: rgba(255, 255, 255, 0.8);
+  --brand-primary: #2563eb;
+  --brand-accent: #059669;
+  --brand-danger: #dc2626;
+  --brand-warning: #d97706;
+  --brand-cyan: #0891b2;
+  --brand-text: #0F172A;
+  --brand-text-muted: #475569;
+  --brand-border: rgba(0, 0, 0, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+}
 
 @theme {
-  --color-brand-bg-start: #0B0F19;
-  --color-brand-bg-end: #02040a;
-  --color-brand-card: rgba(13, 18, 31, 0.4);
-  --color-brand-primary: #3b82f6;
-  --color-brand-accent: #10b981;
-  --color-brand-danger: #f43f5e;
-  --color-brand-warning: #f59e0b;
-  --color-brand-cyan: #06b6d4;
-  
-  --font-mono: "JetBrains Mono", "Fira Code", monospace;
-  --font-sans: "Outfit", "Inter", system-ui, sans-serif;
-
-  --animate-glow-pulse: glowPulse 10s infinite alternate ease-in-out;
-  --animate-radar-pulse: radarPulse 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
-  --animate-cyber-scan: scan 6s linear infinite;
+  --color-brand-bg-start: var(--brand-bg-start);
+  --color-brand-bg-end: var(--brand-bg-end);
+  --color-brand-card: var(--brand-card);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-danger: var(--brand-danger);
+  --color-brand-warning: var(--brand-warning);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-brand-text: var(--brand-text);
+  --color-brand-text-muted: var(--brand-text-muted);
 }
 
 @layer base {
   body {
-    @apply font-sans antialiased selection:bg-brand-primary/30 selection:text-white text-slate-200;
-    background: radial-gradient(circle at 50% 50%, var(--color-brand-bg-start) 0%, var(--color-brand-bg-end) 100%);
+    @apply font-sans antialiased selection:bg-brand-primary/30;
+    background: radial-gradient(circle at 50% 50%, var(--brand-bg-start) 0%, var(--brand-bg-end) 100%);
+    color: var(--brand-text);
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
   }
 }
 
@@ -37,28 +62,31 @@
       linear-gradient(180deg, #050a15 0%, #02040a 100%);
   }
 
-  .cyber-grid {
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 30px 30px;
-  }
-
   .glass-panel {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl;
-    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid var(--brand-border);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.1), 0 0 15px rgba(255, 255, 255, 0.02);
+    transition: background 0.3s ease, border 0.3s ease;
   }
 
   .glass-panel-heavy {
-    @apply backdrop-blur-[32px] bg-black/40 border border-white/10 rounded-2xl shadow-2xl;
+    @apply backdrop-blur-[24px] rounded-xl shadow-2xl;
+    background: var(--glass-bg);
+    border: 1px solid var(--brand-border);
+    transition: background 0.3s ease, border 0.3s ease;
   }
 
-  /* Fixed civilian-bg to allow scrolling */
   .civilian-bg {
-    @apply bg-[#0B0F19] relative min-h-screen overflow-x-hidden;
+    background-color: #0B0F19;
+    position: relative;
+    overflow: hidden;
   }
-
-  .civilian-bg-effect {
+  .civilian-bg::before {
     content: '';
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     width: 150vw;
@@ -71,18 +99,27 @@
   }
 
   .emergency-btn {
-    @apply bg-slate-900/60 backdrop-blur-md text-white transition-all duration-300 border border-transparent relative z-10;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    background-color: rgba(25, 30, 45, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-width: 1px;
+    border-style: solid;
+    position: relative;
+    z-index: 10;
   }
-  
   .emergency-btn:hover {
-    @apply -translate-y-1.5 scale-[1.02];
+    transform: translateY(-4px) scale(1.02);
   }
-
-  .btn-police { @apply border-blue-600/40 hover:border-blue-500 hover:shadow-blue-500/40; }
-  .btn-ambulance { @apply border-emerald-600/40 hover:border-emerald-500 hover:shadow-emerald-500/40; }
-  .btn-fire { @apply border-rose-600/40 hover:border-rose-500 hover:shadow-rose-500/40; }
-  .btn-disaster { @apply border-amber-600/40 hover:border-amber-500 hover:shadow-amber-500/40; }
+  .btn-police { border-color: #2563eb; }
+  .btn-police:hover { border-color: #3b82f6; box-shadow: 0 0 20px rgba(43, 99, 255, 0.6); }
+  .btn-ambulance { border-color: #059669; }
+  .btn-ambulance:hover { border-color: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+  .btn-fire { border-color: #e11d48; }
+  .btn-fire:hover { border-color: #f43f5e; box-shadow: 0 0 20px rgba(244, 63, 94, 0.6); }
+  .btn-disaster { border-color: #d97706; }
+  .btn-disaster:hover { border-color: #f59e0b; box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); }
 
   .radar-pulse {
     box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
@@ -90,24 +127,29 @@
   }
 
   .tactical-glow {
-    box-shadow: 0 0 25px rgba(6, 182, 212, 0.15), inset 0 0 10px rgba(6, 182, 212, 0.05);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
   }
 
   .cyber-button {
-    @apply relative px-6 py-2.5 bg-white/5 border border-white/10 text-slate-300 hover:bg-brand-primary/10 hover:border-brand-primary/40 hover:text-brand-primary transition-all duration-300 text-xs font-mono uppercase tracking-[0.2em] overflow-hidden rounded-md;
+    @apply relative px-4 py-2 bg-white/5 border border-white/10 text-slate-300 hover:bg-brand-primary/10 hover:border-brand-primary/40 hover:text-brand-primary transition-all duration-300 text-sm font-mono uppercase tracking-widest overflow-hidden rounded-md;
   }
 
-  .cyan-glow-text { text-shadow: 0 0 12px rgba(6, 182, 212, 0.6); }
-  .amber-glow-text { text-shadow: 0 0 12px rgba(245, 158, 11, 0.6); }
+  .cyan-glow-text {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  }
+
+  .amber-glow-text {
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+  }
 }
 
 @keyframes glowPulse {
-  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
-  100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.8; }
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
 }
 
 @keyframes radarPulse {
-  to { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+  to { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
 }
 
 @keyframes scan {
@@ -122,19 +164,32 @@
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-scan {
+  animation: scan 6s linear infinite;
+}
+
+.animate-blink {
+  animation: blink 1.5s step-end infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }
 
 /* Custom Scrollbar */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #02040a; }
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-800 rounded-full hover:bg-brand-cyan transition-colors;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
-
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #1e293b #02040a;
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-cyan);
 }
-

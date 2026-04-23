@@ -40,17 +40,17 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
       {/* Mobile Backdrop */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-30 lg:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
 
       <aside className={cn(
-        "fixed left-0 top-0 h-full glass-panel !rounded-none !border-y-0 !border-l-0 border-r border-white/10 flex flex-col z-[100] transition-all duration-300 ease-in-out shadow-2xl overflow-hidden",
+        "fixed left-0 top-0 h-full glass-panel !rounded-none !border-y-0 !border-l-0 border-r border-brand-border flex flex-col z-[100] transition-all duration-300 ease-in-out shadow-2xl overflow-hidden",
         isOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full lg:translate-x-0 lg:w-20"
       )}>
         <div className={cn(
-          "p-6 flex flex-col items-center border-b border-slate-100 transition-all duration-300",
+          "p-6 flex flex-col items-center border-b border-brand-border transition-all duration-300",
           !isOpen && "lg:p-4 lg:items-center"
         )}>
           <div className="relative mb-3">
@@ -61,15 +61,15 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
             "text-center transition-opacity duration-300",
             !isOpen && "lg:opacity-0 lg:h-0 overflow-hidden"
           )}>
-            <h1 className="font-bold text-base tracking-[0.2em] text-[#F8FAFC] uppercase">OMNIGUARD</h1>
-            <p className="text-[8px] text-emerald-500 font-mono tracking-[0.4em] uppercase mt-1">Operational {roleLabel}</p>
+            <h1 className="font-bold text-base tracking-[0.2em] text-brand-text uppercase">OMNIGUARD</h1>
+            <p className="text-[8px] text-brand-accent font-mono tracking-[0.4em] uppercase mt-1">Operational {roleLabel}</p>
           </div>
 
         </div>
 
         <nav className="flex-1 p-4 flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
           <p className={cn(
-            "text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest px-4 mb-2 transition-opacity duration-300",
+            "text-[10px] font-bold text-brand-text-muted uppercase tracking-widest px-4 mb-2 transition-opacity duration-300",
             !isOpen && "lg:opacity-0 lg:h-0 overflow-hidden"
           )}>
             Main Terminal
@@ -84,8 +84,8 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
               className={({ isActive }) => cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden",
                 isActive 
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
-                  : "text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/5",
+                  ? "bg-brand-accent/10 text-brand-accent border border-brand-accent/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
+                  : "text-brand-text-muted hover:text-brand-text hover:bg-white/5",
                 !isOpen && "lg:justify-center lg:px-0"
               )}
             >
@@ -110,7 +110,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
                   
                   {/* Tooltip for collapsed state */}
                   {!isOpen && (
-                    <div className="absolute left-full ml-4 px-2 py-1 bg-slate-900 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap hidden lg:block">
+                    <div className="absolute left-full ml-4 px-2 py-1 bg-brand-bg-end text-brand-text text-[10px] rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap hidden lg:block border border-brand-border">
                       {item.label}
                     </div>
                   )}
@@ -156,7 +156,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
           <button 
             onClick={onLogout}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 w-full text-[#94A3B8] hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all duration-300 group",
+              "flex items-center gap-3 px-4 py-3 w-full text-brand-text-muted hover:text-brand-danger hover:bg-brand-danger/10 rounded-xl transition-all duration-300 group",
               !isOpen && "lg:justify-center lg:px-0"
             )}
           >
