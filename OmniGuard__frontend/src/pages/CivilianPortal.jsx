@@ -48,7 +48,8 @@ export default function CivilianPortal({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen civilian-bg font-sans">
+    <div className="min-h-screen civilian-bg font-sans overflow-y-auto">
+      <div className="civilian-bg-effect" />
       {/* Header */}
       <header className="bg-[#0B0F19]/80 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <div className="flex items-center gap-3">
