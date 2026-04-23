@@ -19,17 +19,16 @@
   /* Light Mode (Command Center) */
   --bg-start: #FFFFFF;
   --bg-end: #F8FAFC;
-  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-bg: rgba(255, 255, 255, 0.9);
   --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.08);
-  --glass-shadow: 0 8px 32px 0 rgba(148, 163, 184, 0.08), 0 0 15px rgba(0, 0, 0, 0.02);
-  --text-primary: #020617; /* Darker slate-950 */
-  --text-muted: #334155;    /* Slate-700 */
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(148, 163, 184, 0.1), 0 0 15px rgba(0, 0, 0, 0.02);
+  --text-primary: #0F172A;
+  --text-muted: #64748B;
   --brand-primary: #2563eb;
   --brand-accent: #059669;
-  --glow-opacity: 0.03;
+  --glow-opacity: 0.05;
 }
-
 
 
 @theme {
@@ -119,21 +118,16 @@
   }
 
   .btn-police { border-color: rgba(59, 130, 246, 0.3); }
-  .light .btn-police { border-color: rgba(37, 99, 235, 0.2); }
   .btn-police:hover { border-color: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
   
   .btn-ambulance { border-color: rgba(16, 185, 129, 0.3); }
-  .light .btn-ambulance { border-color: rgba(5, 150, 105, 0.2); }
   .btn-ambulance:hover { border-color: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); }
   
   .btn-fire { border-color: rgba(244, 63, 94, 0.3); }
-  .light .btn-fire { border-color: rgba(225, 29, 72, 0.2); }
   .btn-fire:hover { border-color: #f43f5e; box-shadow: 0 0 20px rgba(244, 63, 94, 0.4); }
   
   .btn-disaster { border-color: rgba(245, 158, 11, 0.3); }
-  .light .btn-disaster { border-color: rgba(217, 119, 6, 0.2); }
   .btn-disaster:hover { border-color: #f59e0b; box-shadow: 0 0 20px rgba(245, 158, 11, 0.4); }
-
 
   .radar-pulse {
     box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);

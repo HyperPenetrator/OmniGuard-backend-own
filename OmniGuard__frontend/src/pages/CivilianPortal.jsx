@@ -140,8 +140,8 @@ export default function CivilianPortal({ onLogin }) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 bg-green-50 border border-emerald-200 text-emerald-800 dark:bg-brand-card dark:border-[#10b981] dark:text-[#10b981] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 shadow-sm dark:shadow-[0_0_10px_rgba(16,185,129,0.3)] relative z-10">
-            <div className="w-2 h-2 bg-emerald-600 dark:bg-[#10b981] rounded-full radar-pulse" />
+          <div className="inline-flex items-center gap-2 bg-brand-card border border-[#10b981] text-[#10b981] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 shadow-[0_0_10px_rgba(16,185,129,0.3)] relative z-10">
+            <div className="w-2 h-2 bg-[#10b981] rounded-full radar-pulse" />
             Emergency Response Network — Active
           </div>
           <h1 className="text-5xl md:text-6xl font-black text-brand-text tracking-tight mb-6 leading-none relative z-10">
@@ -167,8 +167,8 @@ export default function CivilianPortal({ onLogin }) {
               className={`emergency-btn ${e.color} p-4 md:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 shadow-lg`}
             >
               <Phone className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" />
-              <span className="font-black text-xl md:text-2xl text-slate-950 dark:text-white">{e.number}</span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-800 dark:text-white/80">{e.label}</span>
+              <span className="font-black text-xl md:text-2xl">{e.number}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">{e.label}</span>
             </a>
           ))}
         </motion.div>
