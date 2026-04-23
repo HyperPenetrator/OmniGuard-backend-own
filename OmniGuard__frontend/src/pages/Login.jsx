@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Lock, Mail, ChevronRight, Activity, AlertCircle, Users } from 'lucide-react';
 import { login } from '../services/api';
+import ThemeToggle from '../components/ThemeToggle';
 
 const MOCK_USERS = [
   { email: 'coordinator@omniguard.io', accessCode: 'omni2024!', role: 'coordinator', name: 'COMMAND ALPHA', rank: 'Commander' },
@@ -47,7 +48,11 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-brand-bg-start flex items-center justify-center p-6 relative overflow-hidden transition-colors duration-300">
+      {/* Universal Theme Toggle */}
+      <div className="absolute top-6 right-6 z-50">
+        <ThemeToggle />
+      </div>
       {/* Background Decorations */}
       <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-500 rounded-full blur-[120px]"></div>
@@ -61,25 +66,25 @@ export default function Login({ onLogin }) {
       >
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-500 rounded-3xl shadow-2xl shadow-emerald-500/20 mb-6 rotate-3">
-            <Shield size={40} className="text-slate-900" />
+            <Shield size={40} className="text-white dark:text-slate-900" />
           </div>
-          <h1 className="text-4xl font-black text-white tracking-tighter mb-2">OMNIGUARD</h1>
-          <p className="text-slate-500 font-mono text-xs uppercase tracking-[0.3em]">Advanced Crisis Management v2.2</p>
+          <h1 className="text-4xl font-black text-brand-text tracking-tighter mb-2">OMNIGUARD</h1>
+          <p className="text-brand-muted font-mono text-xs uppercase tracking-[0.3em]">Advanced Crisis Management v2.2</p>
         </div>
 
-        <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 p-8 md:p-10 rounded-[2.5rem] shadow-2xl overflow-hidden relative group">
+        <div className="bg-brand-card backdrop-blur-xl border border-brand-muted/20 p-8 md:p-10 rounded-[2.5rem] shadow-2xl overflow-hidden relative group">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-blue-500 to-emerald-500 opacity-50"></div>
           
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Secure Email</label>
+              <label className="text-xs font-bold text-brand-muted uppercase tracking-widest ml-1">Secure Email</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                 <input 
                   type="email" 
                   required
                   placeholder="name@omniguard.io"
-                  className="w-full bg-slate-800/50 border border-slate-700/50 rounded-2xl py-4 pl-12 pr-4 text-white focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none transition-all placeholder:text-slate-600"
+                  className="w-full bg-brand-muted/10 border border-brand-muted/20 rounded-2xl py-4 pl-12 pr-4 text-brand-text focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none transition-all placeholder:text-brand-muted/50"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -87,14 +92,14 @@ export default function Login({ onLogin }) {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Access Code</label>
+              <label className="text-xs font-bold text-brand-muted uppercase tracking-widest ml-1">Access Code</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
                 <input 
                   type="password" 
                   required
                   placeholder="••••••••"
-                  className="w-full bg-slate-800/50 border border-slate-700/50 rounded-2xl py-4 pl-12 pr-4 text-white focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none transition-all placeholder:text-slate-600"
+                  className="w-full bg-brand-muted/10 border border-brand-muted/20 rounded-2xl py-4 pl-12 pr-4 text-brand-text focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 outline-none transition-all placeholder:text-brand-muted/50"
                   value={accessCode}
                   onChange={(e) => setAccessCode(e.target.value)}
                 />
@@ -128,8 +133,7 @@ export default function Login({ onLogin }) {
             </button>
           </form>
 
-          <div className="mt-8 border-t border-slate-800 pt-6">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <p className="text-xs font-bold text-brand-muted uppercase tracking-widest mb-4 flex items-center gap-2">
               <Users size={14} className="text-emerald-500" /> Test Accounts
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
@@ -137,10 +141,10 @@ export default function Login({ onLogin }) {
                 <div 
                   key={i} 
                   onClick={() => {setEmail(u.email); setAccessCode(u.accessCode);}} 
-                  className="bg-slate-800/40 border border-slate-700/50 p-3 rounded-xl cursor-pointer hover:bg-slate-800 hover:border-emerald-500/30 transition-all group"
+                  className="bg-brand-muted/5 border border-brand-muted/20 p-3 rounded-xl cursor-pointer hover:bg-brand-muted/10 hover:border-emerald-500/30 transition-all group"
                 >
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-[11px] font-bold text-slate-200 truncate pr-2 group-hover:text-emerald-400 transition-colors">{u.email}</span>
+                    <span className="text-[11px] font-bold text-brand-text truncate pr-2 group-hover:text-emerald-400 transition-colors">{u.email}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] text-slate-500 font-mono">PWD: {u.accessCode}</span>

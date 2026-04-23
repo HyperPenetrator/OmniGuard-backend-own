@@ -17,6 +17,7 @@ import {
   Database,
   Maximize2
 } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
 
 const TacticalDashboard = () => {
   const [time, setTime] = useState(new Date());
@@ -41,7 +42,7 @@ const TacticalDashboard = () => {
   }, []);
 
   return (
-    <div className="h-screen w-full flex flex-col volumetric-bg text-slate-300 font-mono overflow-hidden p-4 gap-4 select-none">
+    <div className="h-screen w-full flex flex-col volumetric-bg text-brand-text font-mono overflow-hidden p-4 gap-4 select-none transition-colors duration-300">
       {/* Top Header - Floating */}
       <header className="h-16 glass-panel flex items-center justify-between px-8 z-50">
         <div className="flex items-center gap-6">
@@ -58,18 +59,18 @@ const TacticalDashboard = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-10">
+          <ThemeToggle />
           <div className="flex flex-col items-end">
-            <span className="text-[9px] text-slate-500 uppercase tracking-[0.2em]">Chronos Protocol</span>
+            <span className="text-[9px] text-brand-muted uppercase tracking-[0.2em]">Chronos Protocol</span>
             <span className="text-lg text-brand-cyan font-bold leading-none cyan-glow-text">{time.toLocaleTimeString()}</span>
           </div>
           <div className="flex flex-col items-end">
-            <span className="text-[9px] text-slate-500 uppercase tracking-[0.2em]">Operator Node</span>
-            <span className="text-lg text-white font-bold leading-none">OG-7729-ALPHA</span>
+            <span className="text-[9px] text-brand-muted uppercase tracking-[0.2em]">Operator Node</span>
+            <span className="text-lg text-brand-text font-bold leading-none">OG-7729-ALPHA</span>
           </div>
           <motion.div 
             whileHover={{ scale: 1.05 }}
-            className="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-cyan/20 to-transparent border border-white/10 flex items-center justify-center cursor-pointer shadow-lg"
+            className="w-11 h-11 rounded-xl bg-brand-cyan/10 border border-brand-muted/20 flex items-center justify-center cursor-pointer shadow-lg"
           >
             <User size={24} className="text-brand-cyan" />
           </motion.div>

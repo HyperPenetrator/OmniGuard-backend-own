@@ -65,13 +65,13 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-black text-[#F8FAFC] tracking-tight uppercase">Admin Strategic Command</h1>
-          <p className="text-[#94A3B8] font-mono text-xs uppercase tracking-[0.2em] mt-1">Autonomous Triage & Dispatch Monitor</p>
+          <h1 className="text-3xl font-black text-brand-text tracking-tight uppercase">Admin Strategic Command</h1>
+          <p className="text-brand-muted font-mono text-xs uppercase tracking-[0.2em] mt-1">Autonomous Triage & Dispatch Monitor</p>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-2xl shadow-sm">
+          <div className="flex items-center gap-2 bg-brand-muted/10 border border-brand-muted/20 px-4 py-2 rounded-2xl shadow-sm">
             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-[10px] font-black text-[#F8FAFC] uppercase tracking-widest">Global Link Active</span>
+            <span className="text-[10px] font-black text-brand-text uppercase tracking-widest">Global Link Active</span>
           </div>
         </div>
       </div>
@@ -86,12 +86,12 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
             transition={{ delay: i * 0.1 }}
             className="glass-panel p-6 shadow-xl shadow-slate-900/50 group hover:border-emerald-500/30 transition-all relative overflow-hidden"
           >
-            <div className={`p-3 rounded-2xl ${stat.bg} ${stat.color} w-fit mb-4 group-hover:scale-110 transition-transform`}>
+            <div className={`p-3 rounded-2xl bg-brand-muted/10 ${stat.color} w-fit mb-4 group-hover:scale-110 transition-transform`}>
               <stat.icon size={24} />
             </div>
-            <p className="text-[10px] font-black text-[#94A3B8] uppercase tracking-widest">{stat.label}</p>
-            <h3 className="text-3xl font-black text-[#F8FAFC] mt-1 font-mono">{stat.value}</h3>
-            <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full translate-x-12 -translate-y-12 -z-10 opacity-50" />
+            <p className="text-[10px] font-black text-brand-muted uppercase tracking-widest">{stat.label}</p>
+            <h3 className="text-3xl font-black text-brand-text mt-1 font-mono">{stat.value}</h3>
+            <div className="absolute top-0 right-0 w-24 h-24 bg-brand-muted/5 rounded-full translate-x-12 -translate-y-12 -z-10 opacity-50" />
           </motion.div>
         ))}
       </div>
@@ -103,8 +103,8 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
           <div className="glass-panel !rounded-[2.5rem] overflow-hidden">
             <div className="p-8 border-b border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <h3 className="text-lg font-black text-[#F8FAFC] uppercase tracking-tight">Autonomous Incident Stream</h3>
-                <p className="text-[#94A3B8] text-[10px] font-bold uppercase tracking-widest">System-handled triage and routing</p>
+                <h3 className="text-lg font-black text-brand-text uppercase tracking-tight">Autonomous Incident Stream</h3>
+                <p className="text-brand-muted text-[10px] font-bold uppercase tracking-widest">System-handled triage and routing</p>
               </div>
               <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
                 {teams.map(team => (
@@ -133,8 +133,8 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
                     <div className="w-20 h-20 bg-emerald-500/10 rounded-[2rem] flex items-center justify-center mb-6">
                       <CheckCircle2 size={40} className="text-emerald-500" />
                     </div>
-                    <h4 className="text-xl font-black text-[#F8FAFC] uppercase">Sector Secure</h4>
-                    <p className="text-[#94A3B8] font-medium mt-2">Zero unhandled threats in current protocol radius.</p>
+                    <h4 className="text-xl font-black text-brand-text uppercase">Sector Secure</h4>
+                    <p className="text-brand-muted font-medium mt-2">Zero unhandled threats in current protocol radius.</p>
                   </motion.div>
                 ) : (
                   filteredIncidents.map((inc) => (
@@ -166,10 +166,10 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
                               Auto-Dispatched
                             </span>
                           </div>
-                          <h4 className="text-xl font-black text-[#F8FAFC] uppercase tracking-tight group-hover:text-emerald-400 transition-colors">
+                          <h4 className="text-xl font-black text-brand-text uppercase tracking-tight group-hover:text-emerald-400 transition-colors">
                             {inc.type} — {typeof inc.location === 'string' ? inc.location : (inc.location?.sector || inc.location?.address || 'Sector Delta')}
                           </h4>
-                          <p className="text-[#94A3B8] text-sm mt-3 leading-relaxed font-medium">
+                          <p className="text-brand-muted text-sm mt-3 leading-relaxed font-medium">
                             {inc.description || 'Automated sensor detection triggered in this sector. Tactical units have been notified and routing is active.'}
                           </p>
                           

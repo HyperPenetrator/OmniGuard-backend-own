@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Flame, Activity, ShieldAlert, Tent, MapPin, ChevronRight, ChevronLeft, CheckCircle2, Navigation, Loader2, Shield, Phone } from 'lucide-react';
 import { createIncident } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import ThemeToggle from '../components/ThemeToggle';
 
 const incidentTypes = [
   { id: 'fire', label: 'Fire', icon: Flame, color: 'bg-rose-100 text-rose-600 border-rose-200' },
@@ -70,25 +71,28 @@ export default function PublicReport() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-brand-bg-start transition-colors duration-300">
       {/* Minimal Header */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-        <button onClick={() => navigate('/')} className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors">
+      <header className="bg-brand-card/80 backdrop-blur-md border-b border-brand-muted/20 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <button onClick={() => navigate('/')} className="flex items-center gap-2 text-brand-muted hover:text-brand-text transition-colors">
           <Shield size={20} className="text-emerald-500" />
-          <span className="font-black text-slate-900 tracking-tight">OMNIGUARD</span>
+          <span className="font-black text-brand-text tracking-tight">OMNIGUARD</span>
         </button>
-        <a href="tel:112" className="flex items-center gap-2 bg-rose-500 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-rose-600 transition-all">
-          <Phone size={16} fill="currentColor" />
-          Call 112
-        </a>
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <a href="tel:112" className="flex items-center gap-2 bg-rose-500 text-white px-4 py-2 rounded-xl font-bold text-sm hover:bg-rose-600 transition-all">
+            <Phone size={16} fill="currentColor" />
+            Call 112
+          </a>
+        </div>
       </header>
 
       <div className="max-w-2xl mx-auto px-6 py-10">
         {step < 4 && (
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 mb-6">
+          <div className="bg-brand-card p-6 rounded-3xl shadow-sm border border-brand-muted/20 mb-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-slate-900">Report Emergency</h2>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Step {step} of {totalSteps}</span>
+              <h2 className="text-xl font-bold text-brand-text">Report Emergency</h2>
+              <span className="text-xs font-bold text-brand-muted uppercase tracking-widest">Step {step} of {totalSteps}</span>
             </div>
             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
               <motion.div
@@ -105,8 +109,8 @@ export default function PublicReport() {
           {step === 1 && (
             <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-slate-800">What is the emergency?</h3>
-                <p className="text-slate-500 mt-2">Select the type of emergency you are reporting.</p>
+                <h3 className="text-2xl font-bold text-brand-text">What is the emergency?</h3>
+                <p className="text-brand-muted mt-2">Select the type of emergency you are reporting.</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {incidentTypes.map((item) => (
@@ -114,7 +118,7 @@ export default function PublicReport() {
                     key={item.id}
                     onClick={() => { setFormData(prev => ({ ...prev, type: item.id })); handleNext(); }}
                     className={`flex flex-col items-center justify-center p-8 rounded-3xl border-2 transition-all active:scale-95 hover:shadow-lg ${
-                      formData.type === item.id ? 'border-emerald-500 bg-emerald-50' : 'border-slate-200 bg-white hover:border-slate-300'
+                      formData.type === item.id ? 'border-emerald-500 bg-emerald-500/10' : 'border-brand-muted/20 bg-brand-card hover:border-brand-muted/40'
                     }`}
                   >
                     <div className={`p-5 rounded-2xl mb-4 ${item.color}`}>
