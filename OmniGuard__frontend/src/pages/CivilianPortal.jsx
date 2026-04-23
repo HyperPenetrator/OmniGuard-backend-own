@@ -5,17 +5,17 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../services/api';
 
 const emergencyNumbers = [
-  { label: 'Police', number: '100', color: 'bg-blue-600' },
-  { label: 'Ambulance', number: '108', color: 'bg-emerald-600' },
-  { label: 'Fire', number: '101', color: 'bg-rose-600' },
-  { label: 'Disaster', number: '1078', color: 'bg-amber-600' },
+  { label: 'Police', number: '100', color: 'btn-police' },
+  { label: 'Ambulance', number: '108', color: 'btn-ambulance' },
+  { label: 'Fire', number: '101', color: 'btn-fire' },
+  { label: 'Disaster', number: '1078', color: 'btn-disaster' },
 ];
 
 const reportTypes = [
-  { icon: Flame, label: 'Fire', color: 'text-rose-500 bg-rose-100' },
-  { icon: Activity, label: 'Medical', color: 'text-emerald-500 bg-emerald-100' },
-  { icon: ShieldAlert, label: 'Crime / Duress', color: 'text-blue-500 bg-blue-100' },
-  { icon: AlertTriangle, label: 'Natural Disaster', color: 'text-amber-500 bg-amber-100' },
+  { icon: Flame, label: 'Fire', color: 'text-rose-400 bg-rose-500/10 border-rose-500/20 hover:border-rose-500 hover:shadow-[0_0_15px_rgba(244,63,94,0.4)]' },
+  { icon: Activity, label: 'Medical', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20 hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)]' },
+  { icon: ShieldAlert, label: 'Crime / Duress', color: 'text-blue-400 bg-blue-500/10 border-blue-500/20 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)]' },
+  { icon: AlertTriangle, label: 'Natural Disaster', color: 'text-amber-400 bg-amber-500/10 border-amber-500/20 hover:border-amber-500 hover:shadow-[0_0_15px_rgba(245,158,11,0.4)]' },
 ];
 
 export default function CivilianPortal({ onLogin }) {
@@ -48,21 +48,21 @@ export default function CivilianPortal({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <div className="min-h-screen civilian-bg font-sans">
       {/* Header */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+      <header className="bg-[#0B0F19]/80 backdrop-blur-md border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
             <Shield size={22} className="text-white" />
           </div>
           <div>
-            <span className="font-black text-slate-900 text-lg tracking-tight">OMNIGUARD</span>
+            <span className="font-black text-white text-lg tracking-tight">OMNIGUARD</span>
             <p className="text-[9px] font-mono text-emerald-600 uppercase tracking-widest leading-none">Public Safety Network</p>
           </div>
         </div>
         <button
           onClick={() => setShowStaffLogin(!showStaffLogin)}
-          className="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-wider"
+          className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider"
         >
           <Lock size={14} />
           Staff Login
@@ -120,15 +120,15 @@ export default function CivilianPortal({ onLogin }) {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-[#121826] border border-[#10b981] text-[#10b981] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest mb-6 shadow-[0_0_10px_rgba(16,185,129,0.3)] relative z-10">
+            <div className="w-2 h-2 bg-[#10b981] rounded-full radar-pulse" />
             Emergency Response Network — Active
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tight mb-6 leading-none">
+          <h1 className="text-5xl md:text-6xl font-black text-white tracking-tight mb-6 leading-none relative z-10">
             Report an Emergency.<br />
             <span className="text-emerald-500">Get Help Fast.</span>
           </h1>
-          <p className="text-xl text-slate-500 font-medium max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed relative z-10">
             OmniGuard connects you directly to the nearest tactical response unit. Your report is automatically triaged and dispatched in seconds.
           </p>
         </motion.div>
@@ -144,7 +144,7 @@ export default function CivilianPortal({ onLogin }) {
             <a
               key={e.label}
               href={`tel:${e.number}`}
-              className={`${e.color} text-white p-4 md:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg`}
+              className={`emergency-btn ${e.color} p-4 md:p-5 rounded-2xl flex flex-col items-center justify-center gap-2 active:scale-95 shadow-lg`}
             >
               <Phone className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" />
               <span className="font-black text-xl md:text-2xl">{e.number}</span>
@@ -158,15 +158,15 @@ export default function CivilianPortal({ onLogin }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 md:p-10 text-center mb-12"
+          className="bg-[#121826]/80 backdrop-blur-xl rounded-3xl border border-slate-700 shadow-2xl p-6 md:p-10 text-center mb-12 relative z-10"
         >
           <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-rose-500 rounded-3xl shadow-2xl shadow-rose-500/30 mb-6">
             <ShieldAlert className="text-white w-8 h-8 md:w-10 md:h-10" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-4">
+          <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight mb-4">
             Report an Emergency Now
           </h2>
-          <p className="text-slate-500 text-sm md:text-base font-medium max-w-lg mx-auto mb-8 leading-relaxed">
+          <p className="text-slate-400 text-sm md:text-base font-medium max-w-lg mx-auto mb-8 leading-relaxed">
             Use our guided 3-step form to report fire, medical emergencies, crimes, or natural disasters. No login required.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-10">
@@ -174,10 +174,10 @@ export default function CivilianPortal({ onLogin }) {
               <button
                 key={t.label}
                 onClick={() => navigate(`/report?type=${encodeURIComponent(t.label)}`)}
-                className={`p-3 md:p-4 rounded-2xl flex flex-col items-center gap-2 ${t.color.split(' ')[1]} border border-slate-100 cursor-pointer hover:scale-105 hover:shadow-md transition-all active:scale-95`}
+                className={`p-3 md:p-4 rounded-2xl flex flex-col items-center gap-2 ${t.color} border cursor-pointer hover:scale-105 transition-all duration-300 ease-out active:scale-95`}
               >
-                <t.icon className={`${t.color.split(' ')[0]} w-6 h-6 md:w-7 md:h-7`} />
-                <span className="text-[10px] md:text-xs font-bold text-slate-700 uppercase tracking-wider">{t.label}</span>
+                <t.icon className="w-6 h-6 md:w-7 md:h-7" />
+                <span className="text-[10px] md:text-xs font-bold text-slate-300 uppercase tracking-wider">{t.label}</span>
               </button>
             ))}
           </div>

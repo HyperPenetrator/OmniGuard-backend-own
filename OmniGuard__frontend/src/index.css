@@ -45,6 +45,51 @@
     @apply backdrop-blur-[24px] bg-black/20 border border-white/10 rounded-xl shadow-2xl;
   }
 
+  .civilian-bg {
+    background-color: #0B0F19;
+    position: relative;
+    overflow: hidden;
+  }
+  .civilian-bg::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150vw;
+    height: 150vh;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+    animation: glowPulse 10s infinite alternate ease-in-out;
+    z-index: 0;
+  }
+
+  .emergency-btn {
+    background-color: rgba(25, 30, 45, 0.6);
+    color: #ffffff;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-width: 1px;
+    border-style: solid;
+    position: relative;
+    z-index: 10;
+  }
+  .emergency-btn:hover {
+    transform: scale(1.04);
+  }
+  .btn-police { border-color: #2563eb; }
+  .btn-police:hover { border-color: #3b82f6; box-shadow: 0 0 20px rgba(43, 99, 255, 0.6); }
+  .btn-ambulance { border-color: #059669; }
+  .btn-ambulance:hover { border-color: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+  .btn-fire { border-color: #e11d48; }
+  .btn-fire:hover { border-color: #f43f5e; box-shadow: 0 0 20px rgba(244, 63, 94, 0.6); }
+  .btn-disaster { border-color: #d97706; }
+  .btn-disaster:hover { border-color: #f59e0b; box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); }
+
+  .radar-pulse {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: radarPulse 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
+  }
+
   .tactical-glow {
     box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
   }
@@ -60,6 +105,15 @@
   .amber-glow-text {
     text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
   }
+}
+
+@keyframes glowPulse {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+  100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+}
+
+@keyframes radarPulse {
+  to { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
 }
 
 @keyframes scan {
