@@ -21,6 +21,7 @@ import TeamDashboard from './pages/TeamDashboard'
 import CivilianPortal from './pages/CivilianPortal'
 import PublicReport from './pages/PublicReport'
 import ErrorBoundary from './components/ErrorBoundary'
+import { ThemeProvider } from './components/ThemeContext'
 
 function cn(...inputs) {
   return twMerge(clsx(inputs))
@@ -274,22 +275,25 @@ function App() {
   // If not logged in, show public portal or login page
   if (!user) {
     return (
-      <ErrorBoundary>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<CivilianPortal onLogin={handleLogin} />} />
-            <Route path="/report" element={<PublicReport />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </ErrorBoundary>
+      <ThemeProvider>
+        <ErrorBoundary>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<CivilianPortal onLogin={handleLogin} />} />
+              <Route path="/report" element={<PublicReport />} />
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </ErrorBoundary>
+      </ThemeProvider>
     )
   }
 
   return (
-    <BrowserRouter>
-      <div className="flex h-screen overflow-hidden font-sans relative">
+    <ThemeProvider>
+      <BrowserRouter>
+        <div className="flex h-screen overflow-hidden font-sans relative">
         <Sidebar 
           user={user} 
           onLogout={handleLogout} 
@@ -412,7 +416,8 @@ function App() {
         </div>
       </div>
     </BrowserRouter>
-  )
+  </ThemeProvider>
+)
 }
 
 // Update the root redirect logic if needed (it's inside the "/" route)
