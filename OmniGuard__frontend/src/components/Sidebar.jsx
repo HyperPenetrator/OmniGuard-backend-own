@@ -46,7 +46,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
       )}
 
       <aside className={cn(
-        "fixed left-0 top-0 h-full bg-white border-r border-slate-200 flex flex-col z-[100] transition-all duration-300 ease-in-out shadow-2xl overflow-hidden",
+        "fixed left-0 top-0 h-full glass-panel !rounded-none !border-y-0 !border-l-0 border-r border-white/10 flex flex-col z-[100] transition-all duration-300 ease-in-out shadow-2xl overflow-hidden",
         isOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full lg:translate-x-0 lg:w-20"
       )}>
         <div className={cn(
@@ -61,7 +61,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
             "text-center transition-opacity duration-300",
             !isOpen && "lg:opacity-0 lg:h-0 overflow-hidden"
           )}>
-            <h1 className="font-bold text-base tracking-[0.2em] text-slate-900 uppercase">OMNIGUARD</h1>
+            <h1 className="font-bold text-base tracking-[0.2em] text-[#F8FAFC] uppercase">OMNIGUARD</h1>
             <p className="text-[8px] text-emerald-500 font-mono tracking-[0.4em] uppercase mt-1">Operational {roleLabel}</p>
           </div>
 
@@ -69,7 +69,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
 
         <nav className="flex-1 p-4 flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
           <p className={cn(
-            "text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-2 transition-opacity duration-300",
+            "text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest px-4 mb-2 transition-opacity duration-300",
             !isOpen && "lg:opacity-0 lg:h-0 overflow-hidden"
           )}>
             Main Terminal
@@ -84,8 +84,8 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
               className={({ isActive }) => cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden",
                 isActive 
-                  ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
-                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-50",
+                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
+                  : "text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/5",
                 !isOpen && "lg:justify-center lg:px-0"
               )}
             >
@@ -99,7 +99,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
                   )}
                   <item.icon size={18} className={cn(
                     "transition-transform duration-300 group-hover:scale-110 shrink-0",
-                    isActive ? "text-emerald-500" : "text-slate-400 group-hover:text-emerald-500/70"
+                    isActive ? "text-emerald-400" : "text-[#94A3B8] group-hover:text-emerald-400/70"
                   )} />
                   <span className={cn(
                     "text-xs font-semibold tracking-wide whitespace-nowrap transition-all duration-300",
@@ -123,7 +123,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
         <div className="p-4 space-y-4">
           {/* System Health Card */}
           <div className={cn(
-            "bg-slate-50 border border-slate-100 p-4 rounded-xl transition-all duration-300",
+            "bg-white/5 border border-white/10 p-4 rounded-xl transition-all duration-300",
             !isOpen && "lg:p-2 lg:flex lg:flex-col lg:items-center"
           )}>
             <div className={cn(
@@ -133,7 +133,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
               <div className="flex items-center gap-2">
                 <Terminal size={12} className="text-emerald-500" />
                 <span className={cn(
-                  "text-[10px] text-slate-400 font-bold uppercase tracking-wider",
+                  "text-[10px] text-[#94A3B8] font-bold uppercase tracking-wider",
                   !isOpen && "lg:hidden"
                 )}>sys_health</span>
               </div>
@@ -143,7 +143,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
               "space-y-2",
               !isOpen && "lg:hidden"
             )}>
-              <div className="flex justify-between text-[8px] font-mono text-slate-400 uppercase">
+              <div className="flex justify-between text-[8px] font-mono text-[#94A3B8] uppercase">
                 <span>Encryption</span>
                 <span>Active</span>
               </div>
@@ -156,7 +156,7 @@ export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {
           <button 
             onClick={onLogout}
             className={cn(
-              "flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-all duration-300 group",
+              "flex items-center gap-3 px-4 py-3 w-full text-[#94A3B8] hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition-all duration-300 group",
               !isOpen && "lg:justify-center lg:px-0"
             )}
           >

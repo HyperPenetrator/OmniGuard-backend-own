@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-bg-start: #050a15;
-  --color-brand-bg-end: #02040a;
+  --color-brand-bg-start: #1e1b4b;
+  --color-brand-bg-end: #020617;
   --color-brand-card: rgba(13, 18, 31, 0.4);
   --color-brand-primary: #3b82f6;
   --color-brand-accent: #10b981;
@@ -16,8 +16,9 @@
 
 @layer base {
   body {
-    @apply text-slate-300 font-sans antialiased selection:bg-brand-primary/30 selection:text-white;
+    @apply font-sans antialiased selection:bg-brand-primary/30 selection:text-white;
     background: radial-gradient(circle at 50% 50%, var(--color-brand-bg-start) 0%, var(--color-brand-bg-end) 100%);
+    color: #F8FAFC;
     min-height: 100vh;
     overflow-x: hidden;
   }
@@ -32,7 +33,12 @@
   }
 
   .glass-panel {
-    @apply backdrop-blur-[16px] bg-white/[0.03] border border-white/[0.05] rounded-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.37), 0 0 15px rgba(255, 255, 255, 0.05);
   }
 
   .glass-panel-heavy {
