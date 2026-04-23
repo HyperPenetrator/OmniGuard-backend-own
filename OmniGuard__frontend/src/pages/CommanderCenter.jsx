@@ -2,13 +2,6 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Shield, ShieldAlert, Users, Terminal, Key, Lock, Radio, Activity, Globe, Power, CornerDownRight } from 'lucide-react'
 
-const responders = [
-  { id: 'R-101', name: 'Alpha Squad', status: 'On Route', location: 'Guwahati NW', load: 85 },
-  { id: 'R-204', name: 'Med-Response Delta', status: 'Active', location: 'Dispur Center', load: 42 },
-  { id: 'R-089', name: 'Fire Engine 12', status: 'Standby', location: 'Nagaon HQ', load: 0 },
-  { id: 'R-312', name: 'Civil Guard Unit', status: 'Active', location: 'Jorhat North', load: 100 },
-]
-
 const accessCodes = [
   { id: 'OP-449', operator: 'S. Singh', code: '••••-••••', level: 4, status: 'Active' },
   { id: 'OP-122', operator: 'A. Baruah', code: '••••-••••', level: 3, status: 'Restricted' },

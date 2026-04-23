@@ -25,7 +25,6 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
     successRate: '0%',
     totalHandled: 0
   });
-  const [loading, setLoading] = useState(true);
   const [filterType, setFilterType] = useState('All');
 
   useEffect(() => {
@@ -35,8 +34,6 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
         setStats(data);
       } catch (err) {
         console.error('Failed to fetch stats', err);
-      } finally {
-        setLoading(false);
       }
     };
     fetchStats();
@@ -140,7 +137,7 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
                     <p className="text-[#94A3B8] font-medium mt-2">Zero unhandled threats in current protocol radius.</p>
                   </motion.div>
                 ) : (
-                  filteredIncidents.map((inc, i) => (
+                  filteredIncidents.map((inc) => (
                     <motion.div
                       layout
                       key={inc.id}

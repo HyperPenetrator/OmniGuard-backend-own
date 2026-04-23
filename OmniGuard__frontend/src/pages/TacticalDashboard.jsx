@@ -21,7 +21,7 @@ import {
 const TacticalDashboard = () => {
   const [time, setTime] = useState(new Date());
   const [cpuUsage, setCpuUsage] = useState([45, 52, 48, 60, 55, 62, 58, 44, 55, 66, 44, 33, 55, 77]);
-  const [alerts, setAlerts] = useState([
+  const [alerts] = useState([
     { id: 1, text: "SIGNAL DETECTED: SECTOR 7G", type: "warning" },
     { id: 2, text: "UPLINK ESTABLISHED: OMNI-SAT-4", type: "info" },
     { id: 3, text: "ENCRYPTION HANDSHAKE COMPLETE", type: "success" },

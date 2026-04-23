@@ -41,6 +41,18 @@ function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [gpsPermission, setGpsPermission] = useState('prompt'); // prompt, granted, denied
 
+  const handleLogin = (userData) => {
+    setUser(userData);
+    localStorage.setItem('omni_user', JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('omni_user');
+    localStorage.clear();
+    sessionStorage.clear();
+  };
+
   // Background Task & App State Management
   useEffect(() => {
     const stateListener = CapApp.addListener('appStateChange', async ({ isActive }) => {
@@ -170,6 +182,7 @@ function App() {
     if (!user || !user.token || user.token === 'undefined') {
       if (user?.token === 'undefined') {
         console.warn('Corrupted session detected, clearing...');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         handleLogout();
       }
       return;
@@ -239,18 +252,6 @@ function App() {
       wsService.disconnect();
     };
   }, [user]);
-
-  const handleLogin = (userData) => {
-    setUser(userData)
-    localStorage.setItem('omni_user', JSON.stringify(userData));
-  }
-
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('omni_user');
-    localStorage.clear();
-    sessionStorage.clear();
-  }
 
   const updateIncidentStatus = async (id, newStatus) => {
     try {
