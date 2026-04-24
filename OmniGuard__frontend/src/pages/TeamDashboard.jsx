@@ -178,16 +178,16 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
             <config.icon size={32} />
           </div>
           <div>
-            <h2 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight uppercase tracking-[0.1em]">{config.label} Dashboard</h2>
-            <p className="text-slate-500 text-[9px] md:text-[10px] mt-1 font-mono uppercase tracking-widest">
+            <h2 className="text-xl md:text-2xl font-black text-brand-text tracking-tight uppercase tracking-[0.1em]">{config.label} Dashboard</h2>
+            <p className="text-brand-muted text-[9px] md:text-[10px] mt-1 font-mono uppercase tracking-widest">
               Unit: {user.unitId || 'CMD-01'} | Status: <span className="text-emerald-500 font-bold">In Sync</span>
             </p>
           </div>
         </div>
         <div className="flex gap-3">
-           <div className="px-4 py-2 bg-white border border-slate-200 rounded-xl flex items-center gap-3 shadow-sm">
+           <div className="px-4 py-2 bg-brand-muted/10 border border-brand-muted/20 rounded-xl flex items-center gap-3 shadow-sm">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Global Status: Active</span>
+              <span className="text-[10px] font-bold text-brand-muted uppercase tracking-widest">Global Status: Active</span>
            </div>
         </div>
       </div>
@@ -200,20 +200,20 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className={`bg-white border ${config.borderColor} p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm group ${config.hoverBorder} transition-all duration-500`}
+            className={`glass-panel p-4 md:p-6 !rounded-xl md:!rounded-2xl shadow-sm group !border-brand-muted/10 ${config.hoverBorder} transition-all duration-500`}
           >
             <div className="flex items-start justify-between">
-              <div className={`p-2 md:p-3 rounded-lg md:rounded-xl ${config.accent} border border-slate-100 ${stat.color} group-hover:scale-110 transition-transform`}>
+              <div className={`p-2 md:p-3 rounded-lg md:rounded-xl ${config.accent} dark:bg-brand-muted/10 border border-slate-100 dark:border-brand-muted/20 ${stat.color} group-hover:scale-110 transition-transform`}>
                 <stat.icon size={24} />
               </div>
-              <div className="flex items-center gap-1 text-[9px] font-mono font-bold text-slate-500 uppercase tracking-tighter">
+              <div className="flex items-center gap-1 text-[9px] font-mono font-bold text-brand-muted uppercase tracking-tighter">
                 <TrendingUp size={10} className="text-emerald-500" />
                 {stat.trend}
               </div>
             </div>
             <div className="mt-4 md:mt-6">
-              <p className="text-[9px] md:text-xs font-bold text-slate-500 uppercase tracking-[0.2em]">{stat.label}</p>
-              <h3 className="text-2xl md:text-4xl font-black text-slate-900 mt-1 font-mono tracking-tighter">{stat.value}</h3>
+              <p className="text-[9px] md:text-xs font-bold text-brand-muted uppercase tracking-[0.2em]">{stat.label}</p>
+              <h3 className="text-2xl md:text-4xl font-black text-brand-text mt-1 font-mono tracking-tighter">{stat.value}</h3>
             </div>
           </motion.div>
         ))}
@@ -254,14 +254,14 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="fixed top-24 left-8 lg:left-72 z-[9999] bg-white/95 backdrop-blur shadow-2xl rounded-3xl p-4 flex items-center gap-5 border border-slate-200 pr-10 ring-1 ring-black/5"
+              className="fixed top-24 left-8 lg:left-72 z-[9999] glass-panel !bg-brand-bg-start/80 backdrop-blur-xl shadow-2xl !rounded-3xl p-4 flex items-center gap-5 !border-brand-muted/20 pr-10 ring-1 ring-black/5"
             >
               <div className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
                 <Navigation size={28} className="animate-pulse" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Active Tactical Routing</p>
-                <h4 className="text-xl font-black text-slate-900 tracking-tighter">
+                <p className="text-[10px] font-black text-brand-muted uppercase tracking-[0.2em]">Active Tactical Routing</p>
+                <h4 className="text-xl font-black text-brand-text tracking-tighter">
                   {routingData.dist}km — {routingData.bearing} to {routingData.sector}
                 </h4>
                 <div className="flex items-center gap-2 mt-1">
@@ -269,35 +269,35 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
                   <span className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest">Live Uplink Active</span>
                 </div>
               </div>
-              <div className="ml-4 pl-6 border-l border-slate-100 flex flex-col items-center">
-                 <span className="text-2xl font-black text-slate-900 font-mono tracking-tighter leading-none">{routingData.eta} MIN</span>
-                 <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1 text-center">Est. Arrival</span>
+              <div className="ml-4 pl-6 border-l border-brand-muted/10 flex flex-col items-center">
+                 <span className="text-2xl font-black text-brand-text font-mono tracking-tighter leading-none">{routingData.eta} MIN</span>
+                 <span className="text-[8px] font-bold text-brand-muted uppercase tracking-widest mt-1 text-center">Est. Arrival</span>
               </div>
             </motion.div>
           )}
         </div>
 
 
-         <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-center">
+         <div className="glass-panel p-6 shadow-sm flex flex-col justify-center !rounded-2xl !border-brand-muted/10">
             <div className="flex items-center gap-3 mb-6">
                <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center text-white">
                   <MapPin size={20} />
                </div>
                <div>
-                  <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight">Zone Intelligence</h4>
-                  <p className="text-[10px] text-slate-500 font-medium">Real-time perimeter analysis</p>
+                  <h4 className="text-sm font-black text-brand-text uppercase tracking-tight">Zone Intelligence</h4>
+                  <p className="text-[10px] text-brand-muted font-medium">Real-time perimeter analysis</p>
                </div>
             </div>
             <div className="space-y-4">
-               <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+               <div className="p-4 bg-brand-muted/5 rounded-xl border border-brand-muted/10">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Target Sector</p>
-                  <p className="text-sm font-black text-slate-900 font-mono">
+                  <p className="text-sm font-black text-brand-text font-mono">
                     {routingData && nearestIncident?.location?.coordinates 
                       ? `${routingData.sector} [${nearestIncident.location.coordinates.lat.toFixed(2)}, ${nearestIncident.location.coordinates.lng.toFixed(2)}]` 
                       : 'Waiting for assignment...'}
                   </p>
                </div>
-               <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+               <div className="p-4 bg-brand-muted/5 rounded-xl border border-brand-muted/10">
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Optimal Route</p>
                   <p className="text-sm font-black text-emerald-600 font-mono uppercase">
                     {routingData ? `${routingData.bearing} [${routingData.dist} KM]` : 'Calculating...'}
@@ -310,21 +310,21 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Incident Feed */}
-        <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl overflow-hidden self-start shadow-sm">
-          <div className="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-            <h3 className="text-[10px] md:text-xs font-bold text-slate-900 uppercase tracking-[0.2em]">Active Team Assignments</h3>
+        <div className="lg:col-span-2 glass-panel !rounded-2xl overflow-hidden self-start shadow-sm !border-brand-muted/10">
+          <div className="p-4 md:p-6 border-b border-brand-muted/10 flex items-center justify-between bg-brand-muted/5">
+            <h3 className="text-[10px] md:text-xs font-bold text-brand-text uppercase tracking-[0.2em]">Active Team Assignments</h3>
             <span className={`px-3 py-1 ${config.bgColor} text-white rounded-lg text-[9px] font-bold uppercase tracking-widest`}>
               {teamIncidents.length} Tasks
             </span>
           </div>
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-brand-muted/10">
              {teamIncidents.length === 0 ? (
                 <div className="p-12 flex flex-col items-center justify-center text-center">
-                   <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
+                   <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4">
                      <CheckCircle2 className="text-emerald-500" size={32} />
                    </div>
-                   <h4 className="text-slate-900 font-bold tracking-widest uppercase text-xs">All Clear</h4>
-                   <p className="text-slate-500 text-xs mt-2 font-mono">No incidents assigned to your team currently.</p>
+                   <h4 className="text-brand-text font-bold tracking-widest uppercase text-xs">All Clear</h4>
+                   <p className="text-brand-muted text-xs mt-2 font-mono">No incidents assigned to your team currently.</p>
                 </div>
              ) : (
                 teamIncidents.map((inc, i) => (
@@ -338,21 +338,21 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
                     <div className="flex gap-6">
                        <div className="flex flex-col items-center">
                           <span className="text-[10px] font-mono text-emerald-600 font-bold">14:2{i}</span>
-                          <div className="w-[2px] flex-1 bg-slate-100 my-2" />
+                          <div className="w-[2px] flex-1 bg-brand-muted/10 my-2" />
                           <div className={`w-2 h-2 rounded-full ${['Reported', 'Triaged', 'Dispatching'].includes(inc.status) ? 'bg-rose-500 animate-pulse' : 'bg-amber-500 animate-pulse'}`} />
                        </div>
                        <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                              <span className={`px-2 py-0.5 rounded text-[8px] font-bold border uppercase ${
-                               ['Critical', 'High'].includes(inc.severity) ? 'bg-rose-100 text-rose-500 border-rose-200' : 
-                               inc.severity === 'Medium' ? 'bg-amber-100 text-amber-500 border-amber-200' : 
-                               'bg-blue-100 text-blue-500 border-blue-200'
+                               ['Critical', 'High'].includes(inc.severity) ? 'bg-rose-500/10 text-rose-500 border-rose-500/20' : 
+                               inc.severity === 'Medium' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' : 
+                               'bg-blue-500/10 text-blue-500 border-blue-500/20'
                              }`}>
-                               {inc.severity}
+                                {inc.severity}
                              </span>
-                             <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">{inc.incidentNumber || inc.id}</span>
+                             <span className="text-[10px] font-mono text-brand-muted uppercase tracking-widest">{inc.incidentNumber || inc.id}</span>
                           </div>
-                          <h4 className="text-sm font-bold text-slate-700 group-hover:text-emerald-600 transition-colors uppercase">
+                          <h4 className="text-sm font-bold text-brand-text group-hover:text-emerald-600 transition-colors uppercase">
                             {inc.type} - {typeof inc.location === 'string' ? inc.location : (inc.location?.sector || inc.location?.address || 'Unknown Sector')}
                           </h4>
                           
@@ -383,8 +383,8 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
 
         {/* Team Status Widget */}
         <div className="space-y-6">
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-             <h3 className="text-[10px] md:text-xs font-bold text-slate-900 uppercase tracking-[0.2em] mb-6">Team Readiness</h3>
+          <div className="glass-panel !border-brand-muted/10 !rounded-2xl p-6 shadow-sm">
+             <h3 className="text-[10px] md:text-xs font-bold text-brand-text uppercase tracking-[0.2em] mb-6">Team Readiness</h3>
              <div className="space-y-6">
                 {[
                   { label: 'Field Personnel', val: 92, color: config.bgColor },
@@ -393,10 +393,10 @@ export default function TeamDashboard({ user, incidents, onUpdateStatus, userLoc
                 ].map((asset) => (
                   <div key={asset.label} className="space-y-2">
                     <div className="flex justify-between items-end">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{asset.label}</span>
-                      <span className="text-xs font-mono font-bold text-slate-900">{asset.val}%</span>
+                      <span className="text-[10px] font-bold text-brand-muted uppercase tracking-widest">{asset.label}</span>
+                      <span className="text-xs font-mono font-bold text-brand-text">{asset.val}%</span>
                     </div>
-                    <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-1 bg-brand-muted/10 rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${asset.val}%` }}
