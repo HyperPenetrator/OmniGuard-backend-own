@@ -102,20 +102,20 @@ export default function ActiveThreats({ incidents = [] }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-slate-900 p-6 rounded-2xl text-white">
+        <div className="glass-panel p-6 !rounded-2xl text-brand-text">
           <h3 className="font-bold mb-4 flex items-center gap-2">
             <ShieldAlert className="text-emerald-400" size={20} />
             Evacuation Protocols
           </h3>
-          <p className="text-slate-400 text-sm mb-6">Standard operating procedures for immediate regional threat escalation.</p>
+          <p className="text-brand-muted text-sm mb-6">Standard operating procedures for immediate regional threat escalation.</p>
           <div className="space-y-4">
-            <div className="p-4 bg-slate-800 rounded-xl border-l-4 border-rose-500">
-              <h4 className="font-bold text-sm">Level 4 Red Alert</h4>
-              <p className="text-xs text-slate-500 mt-1">Full state mobilization and mandatory evacuation of low-lying flood zones.</p>
+            <div className="p-4 bg-brand-muted/10 rounded-xl border-l-4 border-rose-500">
+              <h4 className="font-bold text-sm text-brand-text">Level 4 Red Alert</h4>
+              <p className="text-xs text-brand-muted mt-1">Full state mobilization and mandatory evacuation of low-lying flood zones.</p>
             </div>
-            <div className="p-4 bg-slate-800 rounded-xl border-l-4 border-orange-500">
-              <h4 className="font-bold text-sm">Level 3 Orange Alert</h4>
-              <p className="text-xs text-slate-500 mt-1">Regional responder standby and pre-emptive resource distribution.</p>
+            <div className="p-4 bg-brand-muted/10 rounded-xl border-l-4 border-orange-500">
+              <h4 className="font-bold text-sm text-brand-text">Level 3 Orange Alert</h4>
+              <p className="text-xs text-brand-muted mt-1">Regional responder standby and pre-emptive resource distribution.</p>
             </div>
           </div>
         </div>
