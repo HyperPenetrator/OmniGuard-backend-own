@@ -7,10 +7,15 @@
   --accent-color: #2563eb;
   --accent-secondary: #059669;
   --glass-morphism-opacity: 0.85;
+  --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(0, 0, 0, 0.15);
   --glass-shadow: 0 8px 32px 0 rgba(148, 163, 184, 0.12);
   --status-critical: #ef4444;
   --status-warning: #f59e0b;
+  --bg-start: #FFFFFF;
+  --bg-end: #F8FAFC;
+  --card-bg: #FFFFFF;
+  --glow-opacity: 0.1;
 }
 
 .dark {
@@ -22,8 +27,14 @@
   --accent-color: #3b82f6;
   --accent-secondary: #10b981;
   --glass-morphism-opacity: 0.05;
+  --glass-bg: rgba(11, 14, 20, 0.7);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   --status-critical: #f43f5e;
   --status-warning: #fbbf24;
+  --bg-start: #0B0E14;
+  --bg-end: #020617;
+  --card-bg: #0B0E14;
+  --glow-opacity: 0.3;
 }
+

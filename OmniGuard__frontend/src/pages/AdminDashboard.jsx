@@ -101,7 +101,7 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
         {/* Automated Incident Feed */}
         <div className="lg:col-span-2 space-y-6">
           <div className="glass-panel !rounded-[2.5rem] overflow-hidden">
-            <div className="p-8 border-b border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="p-8 border-b border-brand-muted/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-black text-brand-text uppercase tracking-tight">Autonomous Incident Stream</h3>
                 <p className="text-brand-muted text-[10px] font-bold uppercase tracking-widest">System-handled triage and routing</p>
@@ -114,7 +114,7 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
                     className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                       filterType === team 
                         ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.5)]' 
-                        : 'bg-white/5 text-[#94A3B8] hover:bg-white/10'
+                        : 'bg-brand-muted/5 text-brand-muted hover:bg-brand-muted/10'
                     }`}
                   >
                     {team}
@@ -122,7 +122,7 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
                 ))}
               </div>
             </div>
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-brand-muted/5">
               <AnimatePresence mode="popLayout">
                 {filteredIncidents.length === 0 ? (
                   <motion.div 
@@ -145,7 +145,7 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ duration: 0.2 }}
-                      className="p-8 hover:bg-white/5 transition-all group border-l-4 border-transparent hover:border-emerald-500"
+                      className="p-8 hover:bg-brand-muted/5 transition-all group border-l-4 border-transparent hover:border-emerald-500"
                     >
                       <div className="flex flex-col md:flex-row gap-6">
                         <div className="flex-1">
@@ -157,7 +157,7 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
                             }`}>
                               {inc.severity}
                             </span>
-                            <span className="text-[10px] font-mono text-[#94A3B8] font-bold uppercase tracking-tighter">
+                            <span className="text-[10px] font-mono text-brand-muted font-bold uppercase tracking-tighter">
                               {inc.incidentNumber || inc.id}
                             </span>
                             <div className="flex-1" />
@@ -174,13 +174,13 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
                           </p>
                           
                           <div className="flex items-center gap-6 mt-6">
-                            <div className="flex items-center gap-2 text-[10px] font-black text-[#94A3B8] uppercase tracking-widest">
-                              <Users size={14} className="text-[#94A3B8]" />
-                              Assigned: <span className="text-[#F8FAFC]">{inc.assignedTeam}</span>
+                            <div className="flex items-center gap-2 text-[10px] font-black text-brand-muted uppercase tracking-widest">
+                              <Users size={14} className="text-brand-muted" />
+                              Assigned: <span className="text-brand-text">{inc.assignedTeam}</span>
                             </div>
-                            <div className="flex items-center gap-2 text-[10px] font-black text-[#94A3B8] uppercase tracking-widest">
-                              <Clock size={14} className="text-[#94A3B8]" />
-                              <span className="text-[#F8FAFC]">{inc.status}</span>
+                            <div className="flex items-center gap-2 text-[10px] font-black text-brand-muted uppercase tracking-widest">
+                              <Clock size={14} className="text-brand-muted" />
+                              <span className="text-brand-text">{inc.status}</span>
                             </div>
                           </div>
                         </div>
@@ -205,8 +205,8 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
         <div className="space-y-8">
           <div className="glass-panel !rounded-[2.5rem] p-8">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-sm font-black text-[#F8FAFC] uppercase tracking-widest">Team Performance</h3>
-              <BarChart3 size={18} className="text-[#94A3B8]" />
+              <h3 className="text-sm font-black text-brand-text uppercase tracking-widest">Team Performance</h3>
+              <BarChart3 size={18} className="text-brand-muted" />
             </div>
             <div className="space-y-8">
               {[
@@ -217,10 +217,10 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
               ].map(team => (
                 <div key={team.label} className="space-y-3">
                   <div className="flex justify-between items-end">
-                    <span className="text-[10px] font-black text-[#94A3B8] uppercase tracking-widest">{team.label}</span>
-                    <span className="text-xs font-mono font-black text-[#F8FAFC]">{team.rate}%</span>
+                    <span className="text-[10px] font-black text-brand-muted uppercase tracking-widest">{team.label}</span>
+                    <span className="text-xs font-mono font-black text-brand-text">{team.rate}%</span>
                   </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-2 bg-brand-muted/20 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${team.rate}%` }}
@@ -233,7 +233,7 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
             </div>
           </div>
 
-          <div className="glass-panel !rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+          <div className="glass-panel !rounded-[2.5rem] p-8 text-brand-text relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-[60px] translate-x-20 -translate-y-20" />
             <div className="relative z-10">
               <div className="flex items-center gap-4 mb-6">
@@ -242,10 +242,10 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
                 </div>
                 <h4 className="text-lg font-black uppercase tracking-tight">System Integrity</h4>
               </div>
-              <p className="text-[#94A3B8] text-sm font-medium leading-relaxed mb-8">
-                Autonomous triage model is currently performing at <span className="text-white">99.8% accuracy</span>. No manual intervention required for 94% of incidents.
+              <p className="text-brand-muted text-sm font-medium leading-relaxed mb-8">
+                Autonomous triage model is currently performing at <span className="text-brand-text">99.8% accuracy</span>. No manual intervention required for 94% of incidents.
               </p>
-              <button className="w-full py-4 bg-white/10 hover:bg-white/20 border border-white/5 text-white font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] transition-all">
+              <button className="w-full py-4 bg-brand-muted/10 hover:bg-brand-muted/20 border border-brand-muted/20 text-brand-text font-black rounded-2xl text-[10px] uppercase tracking-[0.2em] transition-all">
                 Download Operational Audit
               </button>
             </div>
