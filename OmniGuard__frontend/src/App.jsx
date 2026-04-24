@@ -318,7 +318,7 @@ function App() {
             user={user} 
             isSidebarOpen={isSidebarOpen} 
             incidents={incidents}
-            toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+            toggleSidebar={() => setIsSidebarOpen(prev => !prev)} 
             onQuickSOS={handleQuickSOS}
           />
           

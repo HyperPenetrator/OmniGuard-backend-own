@@ -22,7 +22,10 @@ export default function TopNav({ user, toggleSidebar, onQuickSOS, incidents = []
     <header className="h-20 glass-panel !rounded-none !border-x-0 !border-t-0 flex items-center justify-between px-4 md:px-8 z-50 sticky top-0">
       <div className="flex items-center gap-4 md:gap-6">
         <button 
-          onClick={toggleSidebar}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleSidebar();
+          }}
           className="p-2 hover:bg-brand-muted/10 rounded-lg transition-colors text-brand-text"
         >
           <Menu size={24} />
