@@ -129,6 +129,13 @@ function App() {
   }, [])
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 350); 
+    return () => clearTimeout(timer);
+  }, [isSidebarOpen]);
+
+  useEffect(() => {
     const handleUnauthorized = () => {
       console.warn('Unauthorized access detected, logging out...');
       handleLogout();
@@ -302,7 +309,7 @@ function App() {
         />
         
         <div className={cn(
-          "flex-1 flex flex-col min-w-0 relative h-full transition-all duration-300",
+          "flex-1 flex flex-col min-w-0 relative h-full transition-all duration-300 bg-slate-50 dark:bg-brand-bg-start",
           isSidebarOpen ? "lg:ml-64" : "lg:ml-20"
         )}>
           <div className="absolute inset-0 pointer-events-none z-50 opacity-[0.01] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]" />

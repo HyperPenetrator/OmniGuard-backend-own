@@ -109,20 +109,6 @@ export default function TacticalMap({ incidents, userLocation, targetIncident })
         <ChangeView center={mapCenter} zoom={13} />
       </MapContainer>
 
-      {/* Map Overlay Info */}
-      <div className="absolute top-4 right-4 z-[1000] bg-brand-bg/80 backdrop-blur-sm border border-slate-800 p-3 rounded-xl pointer-events-none">
-        <h4 className="text-[8px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-2">Map Registry</h4>
-        <div className="space-y-2">
-           <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-              <span className="text-[9px] text-slate-300 font-mono uppercase">Detected</span>
-           </div>
-           <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-              <span className="text-[9px] text-slate-300 font-mono uppercase">Team Dispatched</span>
-           </div>
-        </div>
-      </div>
     </div>
   );
 }

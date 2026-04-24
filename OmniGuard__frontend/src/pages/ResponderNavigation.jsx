@@ -54,20 +54,45 @@ export default function ResponderNavigation({ user, incidents = [], onUpdateStat
           </div>
 
           {/* Map Overlay HUD */}
-          <div className="absolute top-6 left-6 md:left-[72px] z-10 w-[calc(100%-3rem)] md:max-w-md">
-             <div className="glass-panel !bg-brand-bg-start/80 backdrop-blur-md p-6 !rounded-3xl shadow-2xl !border-brand-muted/20 flex items-center justify-between gap-6">
-                <div className="flex items-center gap-5">
-                   <div className="bg-emerald-500 p-4 rounded-2xl text-white shadow-xl shadow-emerald-500/40 shrink-0">
-                      <Navigation size={28} />
-                   </div>
-                   <div className="min-w-0">
-                      <p className="text-[10px] font-black text-brand-muted uppercase tracking-widest">Routing Instruction</p>
-                      <p className="font-black text-brand-text text-lg truncate">350m - Turn Right at Beltola Chowk</p>
-                   </div>
+          {/* Map Overlay HUD - Left Group */}
+          <div className="absolute top-6 left-6 md:left-[72px] z-10 w-[calc(100%-8rem)] md:max-w-xs">
+             <div className="glass-panel !bg-brand-bg-start/80 backdrop-blur-md p-4 !rounded-2xl shadow-2xl !border-brand-muted/20 flex items-center gap-4">
+                <div className="bg-emerald-500 p-3 rounded-xl text-white shadow-xl shadow-emerald-500/40 shrink-0">
+                   <Navigation size={20} />
                 </div>
-                <div className="text-right border-l border-brand-muted/10 pl-8 shrink-0">
-                   <p className="text-3xl font-black text-brand-text leading-none">4 MIN</p>
-                   <p className="text-[10px] font-black text-brand-muted uppercase tracking-widest mt-1">Est. Arrival</p>
+                <div className="min-w-0">
+                   <p className="text-[9px] font-black text-brand-muted uppercase tracking-widest leading-none mb-1">Routing</p>
+                   <p className="font-black text-brand-text text-sm truncate">350m - Turn Right</p>
+                </div>
+             </div>
+          </div>
+
+          {/* Map Overlay HUD - Right Grouped Container */}
+          <div className="absolute top-6 right-6 z-10 flex flex-col gap-4 items-end">
+             {/* Arrival Block */}
+             <div className="glass-panel !bg-brand-bg-start/80 backdrop-blur-md p-4 !rounded-2xl shadow-2xl !border-brand-muted/20 text-right min-w-[100px]">
+                <p className="text-2xl font-black text-brand-text leading-none">4 MIN</p>
+                <p className="text-[9px] font-black text-brand-muted uppercase tracking-widest mt-1">Est. Arrival</p>
+             </div>
+
+             {/* Map Registry Block (Relocated from TacticalMap) */}
+             <div className="glass-panel !bg-brand-bg-start/80 backdrop-blur-md p-4 !rounded-2xl shadow-2xl !border-brand-muted/20 min-w-[140px]">
+                <h4 className="text-[9px] font-black text-brand-muted uppercase tracking-widest mb-3 border-b border-brand-muted/10 pb-2">Map Registry</h4>
+                <div className="space-y-2">
+                   <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                         <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                         <span className="text-[9px] text-brand-text font-mono uppercase">Detected</span>
+                      </div>
+                      <span className="text-[9px] text-brand-muted font-bold">02</span>
+                   </div>
+                   <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                         <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                         <span className="text-[9px] text-brand-text font-mono uppercase">Dispatched</span>
+                      </div>
+                      <span className="text-[9px] text-brand-muted font-bold">01</span>
+                   </div>
                 </div>
              </div>
           </div>
