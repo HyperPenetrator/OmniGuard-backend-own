@@ -208,6 +208,8 @@ export default function CivilianPortal({ onLogin }) {
             </div>
             <ChevronRight className="w-6 h-6" />
           </button>
+        </motion.div>
+
         {/* Info Footer */}
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 text-slate-400 dark:text-brand-muted text-xs font-bold uppercase tracking-widest pb-12">
           <div className="flex items-center gap-2">
