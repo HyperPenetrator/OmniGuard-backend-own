@@ -99,3 +99,13 @@ export async function getStats(token) {
   return data.data;
 }
 
+export async function getTrafficStats(token) {
+  const res = await fetch(`${API_BASE}/traffic`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  
+  const data = await handleResponse(res, 'Failed to fetch traffic stats');
+  return data.data;
+}
+
+

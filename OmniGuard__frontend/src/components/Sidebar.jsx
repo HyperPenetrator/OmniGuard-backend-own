@@ -26,8 +26,10 @@ const menuItems = {
     { id: 'command', icon: Terminal, label: 'Command Terminal', path: '/coordinator' },
     { id: 'maps', icon: MapPin, label: 'Tactical Map', path: '/maps' },
     { id: 'alerts', icon: ShieldAlert, label: 'Threat Center', path: '/alerts' },
+    { id: 'traffic', icon: Activity, label: 'Traffic Telemetry', path: '/traffic' },
     { id: 'profile', icon: User, label: 'Admin ID', path: '/profile' },
   ]
+
 }
 
 export default function Sidebar({ user, onLogout, isOpen, setIsOpen }) {

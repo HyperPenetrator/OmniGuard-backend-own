@@ -22,6 +22,7 @@ import CivilianPortal from './pages/CivilianPortal'
 import PublicReport from './pages/PublicReport'
 import ErrorBoundary from './components/ErrorBoundary'
 import { ThemeProvider } from './components/ThemeContext'
+import TrafficDashboard from './pages/TrafficDashboard'
 
 function cn(...inputs) {
   return twMerge(clsx(inputs))
@@ -46,7 +47,6 @@ function App() {
     setUser(userData);
     localStorage.setItem('omni_user', JSON.stringify(userData));
   };
-
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('omni_user');
@@ -198,10 +198,10 @@ function App() {
     if (!user || !user.token || user.token === 'undefined') {
       if (user?.token === 'undefined') {
         console.warn('Corrupted session detected, clearing...');
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        handleLogout();
+        setTimeout(() => handleLogout(), 0);
       }
       return;
+
     }
 
     const loadIncidents = async () => {
@@ -268,6 +268,7 @@ function App() {
       wsService.disconnect();
     };
   }, [user]);
+
 
   const updateIncidentStatus = async (id, newStatus) => {
     try {
@@ -418,6 +419,11 @@ function App() {
                 <Route path="/alerts" element={
                   <ProtectedRoute user={user} allowedRoles={['coordinator']}>
                     <ActiveThreats incidents={incidents} />
+                  </ProtectedRoute>
+                } />
+                <Route path="/traffic" element={
+                  <ProtectedRoute user={user} allowedRoles={['coordinator']}>
+                    <TrafficDashboard user={user} />
                   </ProtectedRoute>
                 } />
 

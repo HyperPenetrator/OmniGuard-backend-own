@@ -68,12 +68,7 @@ export default function AdminDashboard({ user, incidents = [], onUpdateStatus })
           <h1 className="text-3xl font-black text-brand-text tracking-tight uppercase">Admin Strategic Command</h1>
           <p className="text-brand-muted font-mono text-xs uppercase tracking-[0.2em] mt-1">Autonomous Triage & Dispatch Monitor</p>
         </div>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-brand-muted/10 border border-brand-muted/20 px-4 py-2 rounded-2xl shadow-sm">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-[10px] font-black text-brand-text uppercase tracking-widest">Global Link Active</span>
-          </div>
-        </div>
+
       </div>
 
       {/* Analytics Grid */}

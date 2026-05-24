@@ -35,6 +35,7 @@ const createAuthRoutes = require('./routes/auth');
 const incidentRoutes = require('./routes/incidents');
 const responderRoutes = require('./routes/responders');
 const triageRoutes = require('./routes/triage');
+const trafficRoutes = require('./routes/traffic');
 
 // ── Services ───────────────────────────────────────────────
 const { createWsService } = require('./services/wsService');
@@ -140,6 +141,7 @@ async function bootstrap() {
   app.use('/api/incidents', verifyToken, incidentRoutes);
   app.use('/api/responders', verifyToken, responderRoutes);
   app.use('/api/triage', verifyToken, triageRoutes);
+  app.use('/api/traffic', verifyToken, trafficRoutes);
 
   // WebSocket health (internal diagnostic)
   app.get('/api/ws/health', (req, res) => {
