@@ -29,6 +29,7 @@ OmniGuard is a high-fidelity, real-time crisis management platform designed for 
 - **Tactical Routing Engine**: Dynamic GPS-based navigation calculating distance, bearing, and ETA for responders.
 - **Geospatial Intelligence**: High-performance interactive maps with real-time responder and incident synchronization.
 - **Role-Based Command**: Specialized portals for Admin Strategists, Tactical Responders, and Public Safety.
+- **Traffic Telemetry**: Real-time monitoring of system connections, throughput, and API endpoint performance.
 
 ## 🔑 System Access & Test Credentials
 

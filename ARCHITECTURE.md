@@ -34,7 +34,16 @@ The **Tactical Routing Engine** is a client-side specialized logic that optimize
 - **Bearing Calculation**: Determines the precise compass heading (0-360°) for navigational guidance.
 - **Dynamic ETA**: Estimated Arrival Time based on a 2.5 min/km response constant with a 1-minute tactical overhead.
 
-## 3. Technology Stack
+## 3. Traffic Telemetry System
+
+A continuous monitoring system for analyzing platform traffic and response metrics.
+
+### Key Features:
+- **Real-Time Active Connections**: Tracks live WebSocket connections per role.
+- **Historical Analysis**: Aggregates hourly request throughput.
+- **Endpoint Profiling**: Captures average response times across core endpoints (e.g., Auth, Incidents).
+
+## 4. Technology Stack
 
 ### Frontend (Mission Control)
 - **Engine**: React 19 (Strict Mode) + Vite
